@@ -20,13 +20,13 @@ sub import {
 
 # tidyoff
 with 'Role::Multiton', # Would like to do ::New but that falls apart once you decide to extend() See rt 89239. For now we TODO the multiton-via-new tests
-    'App::Kit::Role::Logger',
+    'App::Kit::Role::Log',
     'App::Kit::Role::Locale',
-    'App::Kit::Role::HTTPer',
-    'App::Kit::Role::NSUtil',
-    'App::Kit::Role::FSUtil',
-    'App::Kit::Role::String',
-    'App::Kit::Role::CTypes',
+    'App::Kit::Role::HTTP',
+    'App::Kit::Role::NS',
+    'App::Kit::Role::FS',
+    'App::Kit::Role::Str',
+    'App::Kit::Role::CType',
     'App::Kit::Role::Detect';
 # tidyon
 
@@ -64,7 +64,9 @@ Via your “app”:
 
 =head1 DESCRIPTION
 
-TODO: fix DES
+TODO: fix DESCRIPTION
+
+TODO: document new()/multiton()
 
     A Lazy Façade to simplify your code/life.
 
@@ -109,6 +111,8 @@ but if that module had access to your App::Kit object:
 
 =head2 easy mocking (for your tests!)
 
+TODO: rw obj? give example
+
 =head1 INTERFACE 
 
 =head2 auto imports
@@ -117,7 +121,7 @@ but if that module had access to your App::Kit object:
 
 =head3 try/catch/finally imported automatically (unless you say not to)
 
-L<Try::Tiny> is enabled automatically unless you pass import the “-no-try” flag:
+L<Try::Tiny> is enabled automatically unless you pass import() “-no-try” flag (Yoda was right: there *is* -no-try!):
 
     use App::Kit '-no-try';
 
@@ -129,9 +133,9 @@ same goes for your App::Kit based object:
 
 Each method returns a lazy loaded/instantiated object that implements the actual functionality.
 
-=head3 $app->logger
+=head3 $app->log
 
-Lazy façade to a L<Log::Dispatch> object (or L<Log::Dispatch::Config> if you have a $app_dir/config/logger.conf)  via L<App::Kit::Role::Logger>.
+Lazy façade to a L<Log::Dispatch> object (or L<Log::Dispatch::Config> if you have a $app_dir/config/log.conf)  via L<App::Kit::Role::Log>.
 
 =head3 $app->locale
 
@@ -145,25 +149,25 @@ Localize your code now without needing an entire subsystem in place just yet!
 
 Lazy façade to a L<App::Kit::Facade::Detect> object via L<App::Kit::Role::Detect>.
 
-=head3 $app->ctypes
+=head3 $app->ctype
 
-Lazy façade to a L<App::Kit::Facade::CTypes> object via L<App::Kit::Role::CTypes>.
+Lazy façade to a L<App::Kit::Facade::CType> object via L<App::Kit::Role::CType>.
 
-=head3 $app->string
+=head3 $app->str
 
-Lazy façade to a L<App::Kit::Facade::CTypes> object via L<App::Kit::Role::CTypes>.
+Lazy façade to a L<App::Kit::Facade::Str> object via L<App::Kit::Role::Str>.
 
 =head3 $app->nsutil
 
-Lazy façade to a L<App::Kit::Facade::NSUtil> object via L<App::Kit::Role::NSUtil>.
+Lazy façade to a L<App::Kit::Facade::NS> object via L<App::Kit::Role::NS>.
 
-=head3 $app->httper
+=head3 $app->http
 
-Lazy façade to a L<App::Kit::Facade::HTTPer> object via L<App::Kit::Role::HTTPer>.
+Lazy façade to a L<App::Kit::Facade::HTTP> object via L<App::Kit::Role::HTTP>.
 
-=head3 $app->fsutil
+=head3 $app->fs
 
-Lazy façade to a L<App::Kit::Facade::HTTPer> object via L<App::Kit::Role::HTTPer>.
+Lazy façade to a L<App::Kit::Facade::HTTP> object via L<App::Kit::Role::HTTP>.
 
 =head1 DIAGNOSTICS
 
@@ -199,41 +203,7 @@ L<http://rt.cpan.org>.
 
 =head1 TODO
 
-Pardon my brain dump, thanks.
-
-=over 4
-
-=item 1. Decide on what <6 letter names, if any, should be done instead.
-
-TODO
-
-Just happened that the first set of methods were 6 letters and it might be nice consistent way to name things but its probably a bunch of hooey so I am leaving it up to stake holder feedback.
-
-On other words, is this:
-
-    $app->logger
-    $app->locale
-    $app->detect
-    $app->ctypes
-    $app->string
-    $app->nsutil
-    $app->httper
-    $app->fsutil
-
-in some way better than:
-
-    $app->log
-    $app->locale
-    $app->detect
-    $app->ctype
-    $app->str
-    $app->ns
-    $app->http
-    $app->fs
-
-Must decide before any thing else is added.
-
-=item 2. More Lazy façade methods
+=item 1. More Lazy façade methods
 
 =over 4 
 
@@ -263,14 +233,14 @@ Must decide before any thing else is added.
 
 =back
 
-=item 3. Encapsulate tests that commonly do:
+=item 2. Encapsulate tests that commonly do:
 
     Class::Unload->unload('…');
     ok(!exists $INC{'….pm'}, 'Sanity: … not loaded before');
     is $app->?->…, '…', '?() …'
     ok(exists $INC{'….pm'}, '… lazy loaded on initial ?()');
 
-=item 4. easy to implement modes
+=item 3. easy to implement modes
 
 for example:
 
@@ -286,7 +256,7 @@ for example:
 
 =back
 
-=item 5. local()-type stash to get/set/has/del arbitrary data/objects to share w/ the rest of the consumers
+=item 4. local()-type stash to get/set/has/del arbitrary data/objects to share w/ the rest of the consumers
 
 =back
 
