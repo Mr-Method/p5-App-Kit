@@ -30,46 +30,6 @@ with 'Role::Multiton', # Would like to do ::New but that falls apart once you de
     'App::Kit::Role::Detect';
 # tidyon
 
-#
-#    'App::Kit::Role::Object' $app->object->get('foo') or $app->object->set('foo', $foo) $app->object->set(foo', sub { lazy }); sub del {} sub has { !!! MOP !!! } (is_set remove)
-#   or:
-# ::Global ::MyMisc ::Things ::MyObjs ::Storer ::Object (what does catalyst call it again?)
-#   or:
-# my $val = $app->set_misc('key', $thing);
-# if ( $app->has_misc('key') ) { …
-# my $val = $app->get_misc('key');
-# my $val = $app->del_misc('key');
-#
-# sub set_misc {
-#     my ($app, $key, $val) = @_;
-#     $app->{'_misc'}{$key} = $val;
-#     return $app->{'_misc'}{$key};
-# }
-#
-# sub has_misc {
-#    return 1 if exists shift->{'_misc'}{$key};
-#    return;
-# }
-#
-# sub get_misc {
-#     my ($app, $key) = @_;
-#
-#     # ? croak() if not exists $app->{'_misc'}{$key}; ?
-#
-#     if ( ++$app->{'_misc_lazy'}{$key} == 1 && ref($app->{'_misc'}{$key}) eq 'CODE' ) {
-#          $app->{'_misc'}{$key} = $app->{'_misc'}{$key}->();
-#     }
-#
-#     return $app->{'_misc'}{$key};
-# }
-#
-# sub del_misc {
-#     my ($app, $key) = @_;
-#     # ? croak() if not exists $app->{'_misc'}{$key}; ?
-#     delete $app->{'_misc_lazy'}{$key};
-#     return delete $app->{'_misc'}{$key};
-# }
-
 1;
 
 __END__
