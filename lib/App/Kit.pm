@@ -32,6 +32,8 @@ with 'Role::Multiton', # Would like to do ::New but that falls apart once you de
 
 1;
 
+# TODO: manifest and deps
+
 __END__
 
 =encoding utf-8
