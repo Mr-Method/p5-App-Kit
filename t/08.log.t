@@ -3,17 +3,17 @@ use Capture::Tiny;
 
 use App::Kit;
 
-diag("Testing logger() for App::Kit $App::Kit::VERSION");
+diag("Testing log() for App::Kit $App::Kit::VERSION");
 
 my $app = App::Kit->new();
 
 ok( !exists $INC{'Log/Dispatch.pm'}, 'lazy under pinning not loaded before' );
-isa_ok( $app->logger, 'Log::Dispatch' );
+isa_ok( $app->log, 'Log::Dispatch' );
 ok( exists $INC{'Log/Dispatch.pm'}, 'lazy under pinning loaded after' );
 
 my $info = Capture::Tiny::capture_merged(
     sub {
-        $app->logger->notice("Your information here.");
+        $app->log->notice("Your information here.");
     }
 );
 
@@ -22,8 +22,8 @@ my $msg = qr/\A#   \xe3\x8f\x92\xc2\xa0. \d{4}-\d{2}-\d{2}\xc2\xa0\d{2}:\d{2}:\d
 like( $info, qr/$msg Your information here.\n\z/, 'msg format is correct' );
 is( $info =~ m/\xc2\xa0(.)/ ? "$1" : undef, "N", "sanity: test does match" );
 
-is( $app->logger->debug("debug level 0"), undef, 'default debug() is not active' );
-is( $app->logger->info("debug level 1"),  undef, 'default info() is not active' );
+is( $app->log->debug("debug level 0"), undef, 'default debug() is not active' );
+is( $app->log->info("debug level 1"),  undef, 'default info() is not active' );
 
 my %levels = (
     debug     => { level => 0, short => "D" },
@@ -46,7 +46,7 @@ for my $level ( sort { $levels{$a}->{level} <=> $levels{$b}->{level} } keys %lev
     my $ret;
     my $out = Capture::Tiny::capture_merged(
         sub {
-            $ret = $app->logger->$level("$level(), level $levels{$level}->{level}");
+            $ret = $app->log->$level("$level(), level $levels{$level}->{level}");
         }
     );
 
@@ -55,13 +55,13 @@ for my $level ( sort { $levels{$a}->{level} <=> $levels{$b}->{level} } keys %lev
     is( $out =~ m/\xc2\xa0(.)/ ? "$1" : undef, $levels{$level}->{short}, "$level() type tag is $levels{$level}->{short}" );
 }
 
-$app->logger->{outputs}{_anon_0}{min_level} = 0;    # eek, patches welcome
+$app->log->{outputs}{_anon_0}{min_level} = 0;    # eek, patches welcome
 
 for my $level ( 'debug', 'info' ) {
     my $ret;
     my $out = Capture::Tiny::capture_merged(
         sub {
-            $ret = $app->logger->$level("$level(), level $levels{$level}->{level}");
+            $ret = $app->log->$level("$level(), level $levels{$level}->{level}");
         }
     );
 

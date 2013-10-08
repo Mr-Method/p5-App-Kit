@@ -75,7 +75,7 @@ sub file_lookup {
     $call->{'inc'} = [] if !exists $call->{'inc'} || ref $call->{'inc'} ne 'ARRAY';
 
     my @paths;
-    my $name = $self->_app->string->prefix;
+    my $name = $self->_app->str->prefix;
     for my $base ( @{ $call->{'inc'} }, $self->spec->catdir( $self->bindir(), ".$name.d" ), @{ $self->inc } ) {
         next if !$base;
         push @paths, $self->spec->catfile( $base, @rel_parts );

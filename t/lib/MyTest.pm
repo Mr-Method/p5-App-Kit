@@ -8,8 +8,8 @@ has foo => ( is => "ro", default => sub { return 42 } );
 
 sub bar { return 23 }
 
-has '+logger' => (
-    default => sub { "busted logger" },
+has '+log' => (
+    default => sub { "busted log" },
 );
 
 1;

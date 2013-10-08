@@ -40,17 +40,17 @@ TODO: {
 }
 
 my %roles = (
-    'Logger' => { isa => 'Log::Dispatch' },
+    'Log'    => { isa => 'Log::Dispatch' },
     'Locale' => { isa => 'Locale::Maketext::Utils::Mock::en' },
-    'HTTPer' => { isa => 'HTTP::Tiny' },
-    'NSUtil' => { isa => 'App::Kit::Facade::NSUtil' },
-    'FSUtil' => { isa => 'App::Kit::Facade::FSUtil' },
-    'String' => { isa => 'App::Kit::Facade::String' },
-    'CTypes' => { isa => 'App::Kit::Facade::CTypes' },
+    'HTTP'   => { isa => 'HTTP::Tiny' },
+    'NS'     => { isa => 'App::Kit::Facade::NS' },
+    'FS'     => { isa => 'App::Kit::Facade::FS' },
+    'Str'    => { isa => 'App::Kit::Facade::Str' },
+    'CType'  => { isa => 'App::Kit::Facade::CType' },
     'Detect' => { isa => 'App::Kit::Facade::Detect' },
 );
 
-for my $role ( sort { $a eq 'Logger' ? $b cmp $a : $a cmp $b } keys %roles ) {
+for my $role ( sort { $a eq 'Log' ? $b cmp $a : $a cmp $b } keys %roles ) {
     my $has = lc($role);
     ok( !exists $app->{$has}, "'$has' does not exist before it is called" );
     is( ref $app->$has(), $roles{$role}->{'isa'}, "'$has' returns the expected object" );

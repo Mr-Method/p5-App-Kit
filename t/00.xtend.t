@@ -35,8 +35,8 @@ is( $app->foo, 42, 'new attr works' );
 can_ok( $app, 'bar' );
 is( $app->bar, 23, 'new method works' );
 
-can_ok( $app, 'logger' );
-is( $app->logger, 'busted logger', 'overridden attr works' );
+can_ok( $app, 'log' );
+is( $app->log, 'busted log', 'overridden attr works' );
 
 can_ok( $app, 'locale' );
 isa_ok( $app->locale, 'Locale::Maketext::Utils::Mock::en', 'non-overridden attr works' );

@@ -19,7 +19,7 @@ has log => (
         # ro-NOOP: my ($app, %new) = @_;
         my ($app) = @_;
 
-        my $path = $app->fsutil->file_lookup( 'config', 'log.conf' );
+        my $path = $app->fs->file_lookup( 'config', 'log.conf' );
 
         if ($path) {
 
