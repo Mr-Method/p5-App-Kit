@@ -48,13 +48,13 @@ This document describes App::Kit version 0.1
 
 =head1 SYNOPSIS
 
-Directly:
+Use directly in your code:
 
     ## no critic (RequireUseStrict) - App::Kit does strict and warnings
     use App::Kit;
     my $app = App::Kit->multiton; # now your script and all the modules that make it up have access to the same logging, localization, and a host of other fetaures without loading anything for them and not requiring special voo doo to load/initialize.
 
-Via your “app”:
+Or roll your own to use instead:
 
     package My::App;
     use Moo;
@@ -102,7 +102,7 @@ but if that module had access to your App::Kit object:
     sub foo {
         my ($x, $y, $z) = @_;
         if ($x) {
-            $app->logger->info("X is truly $x");
+            $app->log->info("X is truly $x");
         }
         …
     }
@@ -113,7 +113,7 @@ but if that module had access to your App::Kit object:
 
 =head2 easy mocking (for your tests!)
 
-TODO: rw obj? give example
+TODO: read/write obj? give example
 
 =head1 INTERFACE 
 
@@ -131,17 +131,39 @@ same goes for your App::Kit based object:
 
     use My::App '-no-try';
 
+=head2 constructors: multiton support
+
+=head3 new()
+
+Since the idea of this class is to share the objects it makes more sence to use multiton() in your code.
+
+Returns a new object everytime. Takes no arguments currently.
+
+I'd like to make it a multiton but L<Role::Multiton::New> does not work right due to rt89239.
+
+=head3 multiton()
+
+Returns the same object on subsequent calls using the same arguments. Since, there are currently no argments it is essentially a singleton.
+
+See L<Role::Multiton> for more details.
+
+=head3 instance()
+
+Alias to multiton(). If you ever plan on modifying the constructor to another type (weirdo) you may want to use this in your code instead of multiton().
+
+See L<Role::Multiton> for more details.
+
 =head2 Lazy façade methods
 
 Each method returns a lazy loaded/instantiated object that implements the actual functionality.
 
 =head3 $app->log
 
-Lazy façade to a L<Log::Dispatch> object (or L<Log::Dispatch::Config> if you have a $app_dir/config/log.conf)  via L<App::Kit::Role::Log>.
+Lazy façade to a logging object via L<App::Kit::Role::Log>.
 
 =head3 $app->locale
 
-Lazy façade to a L<Locale::Maketext::Utils::Mock> object via L<App::Kit::Role::Locale>. 
+Lazy façade to a maketext() object via L<App::Kit::Role::Locale>. 
 
 Has all the methods any L<Locale::Maketext::Utils> based object would have.
 
@@ -149,27 +171,27 @@ Localize your code now without needing an entire subsystem in place just yet!
 
 =head3 $app->detect
 
-Lazy façade to a L<App::Kit::Facade::Detect> object via L<App::Kit::Role::Detect>.
+Lazy façade to a context detection object via L<App::Kit::Role::Detect>.
 
 =head3 $app->ctype
 
-Lazy façade to a L<App::Kit::Facade::CType> object via L<App::Kit::Role::CType>.
+Lazy façade to ctype utility object via L<App::Kit::Role::CType>.
 
 =head3 $app->str
 
-Lazy façade to a L<App::Kit::Facade::Str> object via L<App::Kit::Role::Str>.
+Lazy façade to a srting utility object via L<App::Kit::Role::Str>.
 
-=head3 $app->nsutil
+=head3 $app->ns
 
-Lazy façade to a L<App::Kit::Facade::NS> object via L<App::Kit::Role::NS>.
+Lazy façade to a name space utility object via L<App::Kit::Role::NS>.
 
 =head3 $app->http
 
-Lazy façade to a L<App::Kit::Facade::HTTP> object via L<App::Kit::Role::HTTP>.
+Lazy façade to an http client object via L<App::Kit::Role::HTTP>.
 
 =head3 $app->fs
 
-Lazy façade to a L<App::Kit::Facade::HTTP> object via L<App::Kit::Role::HTTP>.
+Lazy façade to an file system utility client object via L<App::Kit::Role::FS>.
 
 =head1 DIAGNOSTICS
 
@@ -205,13 +227,15 @@ L<http://rt.cpan.org>.
 
 =head1 TODO
 
+=over 4
+
 =item 1. More Lazy façade methods
 
 =over 4 
 
 =item * App::Kit::Role::DB 
 
-    # $app->dbutil->dbh (config file || args, set UTF-8, set UTC,reconnect etc);
+    # $app->db->dbh (connect() per config file || args, set UTF-8, set UTC,reconnect etc);
 
 =item * App::Kit::Role::Runner 
 
@@ -219,7 +243,7 @@ L<http://rt.cpan.org>.
 
 =item * App::Kit::Role::Crypt 
 
-    # $app->xcrypt->encrypt($str, $cipher) $app->xcrypt->decrypt($str, $cipher) ->rand_data
+    # $app->crypt->encrypt($str, $cipher) $app->xcrypt->decrypt($str, $cipher) ->rand_data
 
 =item * App::Kit::Role::Cache
 
@@ -227,7 +251,7 @@ L<http://rt.cpan.org>.
 
 =item * App::Kit::Role::In
 
-    # i.e. HTTP or ARGV == $app->inputs->param()
+    # i.e. HTTP or ARGV == $app->in->param('name')
 
 =item * App::Kit::Role::Out
 
