@@ -1,7 +1,9 @@
-package App::Kit::Facade::String;
+package App::Kit::Facade::Str;
 
 ## no critic (RequireUseStrict) - Moo does strict
 use Moo;
+
+our $VERSION = '0.1';
 
 sub portable_crlf {
     return "\015\012";    # "\r\n" is not portable

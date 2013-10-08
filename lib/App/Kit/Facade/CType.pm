@@ -1,7 +1,9 @@
-package App::Kit::Facade::CTypes;
+package App::Kit::Facade::CType;
 
 ## no critic (RequireUseStrict) - Moo does strict
 use Moo;
+
+our $VERSION = '0.1';
 
 has mimeobj => (
     'is'      => 'ro',

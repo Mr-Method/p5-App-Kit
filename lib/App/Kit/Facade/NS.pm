@@ -1,9 +1,9 @@
-package App::Kit::Facade::NSUtil;
+package App::Kit::Facade::NS;
 
 ## no critic (RequireUseStrict) - Moo does strict/warnings
 use Moo;
 
-$App::Kit::Facade::NSUtil::VERSION = '0.1';
+our $VERSION = '0.1';
 
 has base => (
     is       => 'rw',
@@ -18,7 +18,7 @@ has base => (
 #### 'base' attr fiddling ##
 ############################
 
-# $app->nsutil->employ('Some::Role', …) and, FWIW, App->nsutil->employ('Some::Role)
+# $app->ns->employ('Some::Role', …) and, FWIW, App->ns->employ('Some::Role)
 Sub::Defer::defer_sub __PACKAGE__ . '::employ' => sub {
     require Role::Tiny;
     return sub {
@@ -28,7 +28,7 @@ Sub::Defer::defer_sub __PACKAGE__ . '::employ' => sub {
     };
 };
 
-# $app->nsutil->absorb("Foo::Bar:zong", …); $app->zong (and, FWIW, App->zong)
+# $app->ns->absorb("Foo::Bar:zong", …); $app->zong (and, FWIW, App->zong)
 sub absorb {
     my $self = shift;
     no strict 'refs';    ## no critic
@@ -53,7 +53,7 @@ sub absorb {
 #### caller fiddling ##
 #######################
 
-# $app->nsutil->impose('pragma', 'Mod::Ule', ['foo::bar',1,2,3]);
+# $app->ns->impose('pragma', 'Mod::Ule', ['foo::bar',1,2,3]);
 # maybe if pragmas could happen, otherwise re-think
 # Sub::Defer::defer_sub __PACKAGE__ . '::impose' => sub {
 #     require Import::Into;
@@ -79,7 +79,7 @@ sub absorb {
 #     };
 # };
 
-# $app->nsutil->enable('Foo::Bar::zing', …) # zing() from Foo::Bar
+# $app->ns->enable('Foo::Bar::zing', …) # zing() from Foo::Bar
 sub enable {
     my $self = shift;
     my $caller = caller(1) || caller(0);

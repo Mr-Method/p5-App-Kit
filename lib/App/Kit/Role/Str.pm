@@ -1,14 +1,16 @@
-package App::Kit::Role::String;
+package App::Kit::Role::Str;
 
 ## no critic (RequireUseStrict) - Moo::Role does strict/warnings
 use Moo::Role;
 
-has string => (
+our $VERSION = '0.1';
+
+has str => (
     is      => 'ro',
     lazy    => 1,
     default => sub {
-        require App::Kit::Facade::String;
-        return App::Kit::Facade::String->new();
+        require App::Kit::Facade::Str;
+        return App::Kit::Facade::Str->new();
     },
 );
 

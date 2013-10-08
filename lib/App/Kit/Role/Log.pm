@@ -1,14 +1,16 @@
-package App::Kit::Role::Logger;
+package App::Kit::Role::Log;
 
 ## no critic (RequireUseStrict) - Moo::Role does strict/warnings
 use Moo::Role;
 
+our $VERSION = '0.1';
+
 # ro-NOOP:
 #   my $isa_digit = sub { die "Must be all digits!" unless $_[0] =~ m/\A[0-9]+\z/; };
-#   has _logger_reload_check_time => ( is => 'rw', lazy => 1, isa => $isa_digit, default => sub { time } );    # not rwp so its easier to test
-#   has _logger_reload_check_every => ( is => 'rw', lazy => 1, isa => $isa_digit, default => sub { 30 } );     # not rwp so its easier to test
+#   has _log_reload_check_time => ( is => 'rw', lazy => 1, isa => $isa_digit, default => sub { time } );    # not rwp so its easier to test
+#   has _log_reload_check_every => ( is => 'rw', lazy => 1, isa => $isa_digit, default => sub { 30 } );     # not rwp so its easier to test
 
-has logger => (
+has log => (
     is      => 'ro',
     lazy    => 1,
     default => sub {
@@ -17,28 +19,28 @@ has logger => (
         # ro-NOOP: my ($app, %new) = @_;
         my ($app) = @_;
 
-        my $path = $app->fsutil->file_lookup( 'config', 'logger.conf' );
+        my $path = $app->fsutil->file_lookup( 'config', 'log.conf' );
 
         if ($path) {
 
-            # Log::Dispatch::Config->configure( $path ); # $app->logger->reload; at will
+            # Log::Dispatch::Config->configure( $path ); # $app->log->reload; at will
 
             # since we only call instance() once this would be a noop *except* the wrapper needs it via needs_reload()
-            #   (we could bypass via $app->logger->{config}->needs_reload but what if the module changes? poof!)
+            #   (we could bypass via $app->log->{config}->needs_reload but what if the module changes? poof!)
             Log::Dispatch::Config->configure_and_watch($path);
 
-            my $logger = Log::Dispatch::Config->instance;
+            my $log = Log::Dispatch::Config->instance;
 
-            # ? TODO: optional 'before' logger per config file or $app->conf('reload_logger')
+            # ? TODO: optional 'before' log per config file or $app->conf('reload_log')
             # check mtime instead?
-            # before 'logger' => sub {
-            #      if (!$app->_logger_reload_check_time() || time() - $app->_logger_reload_check_time() < $app->_logger_reload_check_every() ) {
-            #          $app->_logger_reload_check_time(time());
-            #          $app->logger->reload if $app->logger->needs_reload;
+            # before 'log' => sub {
+            #      if (!$app->_log_reload_check_time() || time() - $app->_log_reload_check_time() < $app->_log_reload_check_every() ) {
+            #          $app->_log_reload_check_time(time());
+            #          $app->log->reload if $app->log->needs_reload;
             #      }
             # };
 
-            return $logger;
+            return $log;
         }
 
         # ro-NOOP: elsif(keys %new) {

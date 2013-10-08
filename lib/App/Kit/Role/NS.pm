@@ -1,14 +1,16 @@
-package App::Kit::Role::NSUtil;
+package App::Kit::Role::NS;
 
 ## no critic (RequireUseStrict) - Moo::Role does strict/warnings
 use Moo::Role;
 
-has nsutil => (
+our $VERSION = '0.1';
+
+has ns => (
     is      => 'ro',
     lazy    => 1,
     default => sub {
-        require App::Kit::Facade::NSUtil;
-        return App::Kit::Facade::NSUtil->new( { base => $_[0] } );
+        require App::Kit::Facade::NS;
+        return App::Kit::Facade::NS->new( { base => $_[0] } );
     },
 );
 

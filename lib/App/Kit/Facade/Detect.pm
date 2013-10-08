@@ -3,6 +3,8 @@ package App::Kit::Facade::Detect;
 ## no critic (RequireUseStrict) - Moo does strict
 use Moo;
 
+our $VERSION = '0.1';
+
 Sub::Defer::defer_sub __PACKAGE__ . '::is_web' => sub {
     require Web::Detect;
     return sub {

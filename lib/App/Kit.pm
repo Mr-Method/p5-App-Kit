@@ -3,7 +3,7 @@ package App::Kit;
 ## no critic (RequireUseStrict) - Moo does strict and warnings
 use Moo;
 
-$App::Kit::VERSION = '0.1';
+our $VERSION = '0.1';
 
 sub import {
     strict->import;

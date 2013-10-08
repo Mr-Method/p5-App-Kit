@@ -1,9 +1,9 @@
-package App::Kit::Facade::FSUtil;
+package App::Kit::Facade::FS;
 
 ## no critic (RequireUseStrict) - Moo does strict
 use Moo;
 
-$App::Kit::Facade::FSUtil::VERSION = '0.1';
+our $VERSION = '0.1';
 
 has _app => (
     is       => 'ro',
@@ -98,8 +98,8 @@ sub file_lookup {
 # Sub::Defer::defer_sub __PACKAGE__ . '::mkfile' => sub {
 #     require File::Touch;
 #     return sub {
-#         my ($fsutil, $path) = @_;
-#         $fsutil->mk_parent( $path ) || return;
+#         my ($fs, $path) = @_;
+#         $fs->mk_parent( $path ) || return;
 #         eval { File::Touch::touch( $path ) } || return;
 #         return 1;
 #     };
