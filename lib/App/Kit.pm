@@ -31,37 +31,6 @@ with 'Role::Multiton', # Would like to do ::New but that falls apart once you de
     'App::Kit::Role::DB';
 # tidyon
 
-# make role => rwp and:
-# sub mocked {
-#     my ( $app, $meth ) = @_;
-#     return $app->_mock_map->{$meth} if exists $app->_mock_map->{$meth};
-#     return;
-# }
-#
-# sub mock {
-#     my ( $app, $meth, $mocker ) = @_;
-#     return unless $app->can($meth);
-#
-#     my $set = "_set_$meth";
-#     $app->_mock_map->{$meth} = $app->$meth;
-#     return $app->$set($mocker);
-# }
-#
-# sub unmock {
-#     my ( $app, $meth ) = @_;
-#     return unless $app->can($meth);
-#     return if !$app->mocked($meth);
-#
-#     my $set = "_set_$meth";
-#     return $app->$set( delete $app->_mock_map->{$meth} );
-# }
-#
-# has _mock_map => (
-#     'is'      => 'ro',
-#     'lazy'    => 1,
-#     'default' => sub { {} },
-# );
-
 1;
 
 __END__
