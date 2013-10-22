@@ -1,5 +1,10 @@
 Revision history for App-Kit
 
+# TODO: POD Role/
+# TODO: POD Facade/
+# TODO: manifest and deps
+# TODO: final RELEASE_TESTING cleanup
+
 0.1  2013-05-22 21:12:21
        Initial release.
 

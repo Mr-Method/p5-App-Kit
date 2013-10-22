@@ -27,12 +27,42 @@ with 'Role::Multiton', # Would like to do ::New but that falls apart once you de
     'App::Kit::Role::FS',
     'App::Kit::Role::Str',
     'App::Kit::Role::CType',
-    'App::Kit::Role::Detect';
+    'App::Kit::Role::Detect',
+    'App::Kit::Role::DB';
 # tidyon
 
-1;
+# make role => rwp and:
+# sub mocked {
+#     my ( $app, $meth ) = @_;
+#     return $app->_mock_map->{$meth} if exists $app->_mock_map->{$meth};
+#     return;
+# }
+#
+# sub mock {
+#     my ( $app, $meth, $mocker ) = @_;
+#     return unless $app->can($meth);
+#
+#     my $set = "_set_$meth";
+#     $app->_mock_map->{$meth} = $app->$meth;
+#     return $app->$set($mocker);
+# }
+#
+# sub unmock {
+#     my ( $app, $meth ) = @_;
+#     return unless $app->can($meth);
+#     return if !$app->mocked($meth);
+#
+#     my $set = "_set_$meth";
+#     return $app->$set( delete $app->_mock_map->{$meth} );
+# }
+#
+# has _mock_map => (
+#     'is'      => 'ro',
+#     'lazy'    => 1,
+#     'default' => sub { {} },
+# );
 
-# TODO: manifest and deps
+1;
 
 __END__
 
@@ -57,20 +87,20 @@ Use directly in your code:
 Or roll your own to use instead:
 
     package My::App;
+
+    ## no critic (RequireUseStrict) - Moo does strict and warnings
     use Moo;
     extends 'App::Kit';
+
     with '…'; # add a new role
     has 'newthing' => ( … ); # add a new attr
     has '+app_kit_thingy' => ( … ); # customize an existing role/attr/method
-    sub newmeth { … } # ad a new methos
+    sub newmeth { … } # add a new method
+    …
 
 =head1 DESCRIPTION
 
-TODO: fix DESCRIPTION
-
-TODO: document new()/multiton()
-
-    A Lazy Façade to simplify your code/life.
+A Lazy Façade to simplify your code/life. How?
 
 Ever see this sort of thing in a growing code base:
 
@@ -91,11 +121,11 @@ Ever see this sort of thing in a growing code base:
         …
     }
 
-but if that module had access to your App::Kit object:
+but if that module (or script) had access to your App::Kit object:
 
     package My::Thing;
 
-    ## no critic (RequireUseStrict) - App::Kit does strict and warnings
+    ## no critic (RequireUseStrict) - MyApp does strict and warnings
     use MyApp;
     my $app = MyApp->multiton; # ok to do this here because it is really really cheap
 
@@ -107,15 +137,35 @@ but if that module had access to your App::Kit object:
         …
     }
 
+Multiply that by hundreds of scripts and modules and vars and tests and wrappers. ick
+
+Some specifics:
+
+=head2 one class/one object to consistently and simply manage some of the complexities of a large code base
+
+Don’t pass around globals, a zillion args, have a bunch of was-this-loaded, do-we-have-that, etc.
+
+Just create the object and use it everywhere. Done, it all works the same with no boiler plate required besides Foo->instance and use it when you need.
+
 =head2 only what you need, when you need it
+
+Only load and instantiate the things your code actually does, with no effort.
+
+Reuse them throughout the code base, again, with no effort!
 
 =head2 use default objects or set your own
 
+The defaults will work and as your project expands you can customize if needed without needing to refactor your code. 
+
+For example, once you sprint the localization setup, you can change your class’s locale() to use your object.
+
 =head2 easy mocking (for your tests!)
 
-TODO: read/write obj? give example
+    $app->log($test_logger); # e.g. say $test_logger stores what level and msg passed to
+    … something that should call $app->log->info('This is a terrible info msg.') …
+    … test that $test_logger saw the expected levels and msgs …
 
-=head1 INTERFACE 
+=head1 INTERFACE
 
 =head2 auto imports
 
@@ -135,11 +185,9 @@ same goes for your App::Kit based object:
 
 =head3 new()
 
-Since the idea of this class is to share the objects it makes more sence to use multiton() in your code.
+Since the idea of this class is to share the objects it makes more sence to use multiton()/instance() in your code.
 
 Returns a new object everytime. Takes no arguments currently.
-
-I'd like to make it a multiton but L<Role::Multiton::New> does not work right due to rt89239.
 
 =head3 multiton()
 
@@ -175,11 +223,11 @@ Lazy façade to a context detection object via L<App::Kit::Role::Detect>.
 
 =head3 $app->ctype
 
-Lazy façade to ctype utility object via L<App::Kit::Role::CType>.
+Lazy façade to a ctype utility object via L<App::Kit::Role::CType>.
 
 =head3 $app->str
 
-Lazy façade to a srting utility object via L<App::Kit::Role::Str>.
+Lazy façade to a string utility object via L<App::Kit::Role::Str>.
 
 =head3 $app->ns
 
@@ -191,7 +239,11 @@ Lazy façade to an http client object via L<App::Kit::Role::HTTP>.
 
 =head3 $app->fs
 
-Lazy façade to an file system utility client object via L<App::Kit::Role::FS>.
+Lazy façade to an file system utility object via L<App::Kit::Role::FS>.
+
+=head3 $app->db
+
+Lazy façade to an database utility object via L<App::Kit::Role::DB>.
 
 =head1 DIAGNOSTICS
 
@@ -233,13 +285,9 @@ L<http://rt.cpan.org>.
 
 =over 4 
 
-=item * App::Kit::Role::DB 
-
-    # $app->db->dbh (connect() per config file || args, set UTF-8, set UTC,reconnect etc);
-
 =item * App::Kit::Role::Runner 
 
-    # $app->runner->commentary([], []), $app->runner->whereis(), $app->runner->syscmd() $app->runner->spork() $app->runner->as_user() $app->runner->usleep() (select(undef, undef undef, abs($n)))
+    # $app->runner->commentary([], []), $app->runner->whereis('…'), $app->runner->run_cmd(…), put_cmd_in, $app->runner->spork(sub {}) $app->runner->as_user(sub {…}) $app->runner->usleep(…) (select(undef, undef undef, abs($n)))
 
 =item * App::Kit::Role::Crypt 
 
@@ -247,7 +295,7 @@ L<http://rt.cpan.org>.
 
 =item * App::Kit::Role::Cache
 
-    # e.g Chi if it becomes drops a few pound by eating less Moose
+    # e.g Chi if it drops a few pounds by eating less Moose
 
 =item * App::Kit::Role::In
 
@@ -256,6 +304,8 @@ L<http://rt.cpan.org>.
 =item * App::Kit::Role::Out
 
     # e.g.TT/classes/ANSI
+
+=item * return obj/exception
 
 =back
 

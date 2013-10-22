@@ -39,22 +39,31 @@ TODO: {
     is( $appt, App::Kit->new( { 'test' => 1 } ), "new() is multiton - same args via hashref" );
 }
 
-my %roles = (
-    'Log'    => { isa => 'Log::Dispatch' },
-    'Locale' => { isa => 'Locale::Maketext::Utils::Mock::en' },
-    'HTTP'   => { isa => 'HTTP::Tiny' },
-    'NS'     => { isa => 'App::Kit::Facade::NS' },
-    'FS'     => { isa => 'App::Kit::Facade::FS' },
-    'Str'    => { isa => 'App::Kit::Facade::Str' },
-    'CType'  => { isa => 'App::Kit::Facade::CType' },
-    'Detect' => { isa => 'App::Kit::Facade::Detect' },
+my @roles = (
+    [ 'Locale' => { isa => 'Locale::Maketext::Utils::Mock::en' } ],
+    [ 'HTTP'   => { isa => 'HTTP::Tiny' } ],
+    [ 'NS'     => { isa => 'App::Kit::Facade::NS' } ],
+    [ 'FS'     => { isa => 'App::Kit::Facade::FS' } ],
+    [ 'Str'    => { isa => 'App::Kit::Facade::Str' } ],
+    [ 'CType'  => { isa => 'App::Kit::Facade::CType' } ],
+    [ 'Detect' => { isa => 'App::Kit::Facade::Detect' } ],
+    [ 'DB'     => { isa => 'App::Kit::Facade::DB' } ],
+    [ 'Log'    => { isa => 'Log::Dispatch' } ],
 );
 
-for my $role ( sort { $a eq 'Log' ? $b cmp $a : $a cmp $b } keys %roles ) {
+for my $role_ar (@roles) {
+    my $role    = $role_ar->[0];
+    my $role_hr = $role_ar->[1];
+
     my $has = lc($role);
     ok( !exists $app->{$has}, "'$has' does not exist before it is called" );
-    is( ref $app->$has(), $roles{$role}->{'isa'}, "'$has' returns the expected object" );
+    is( ref $app->$has(), $role_hr->{'isa'}, "'$has' returns the expected object" );
     ok( exists $app->{$has}, "'$has' exists after it is called" );
+
+    my $org = $app->$has();
+    is( ref $app->$has( bless {}, 'Foo' ), 'Foo', "'$has' can be set, returns new obj" );
+    is( ref $app->$has(), 'Foo', "'$has' subsequently returns the new object" );
+    $app->$has($org);
 }
 
 done_testing;

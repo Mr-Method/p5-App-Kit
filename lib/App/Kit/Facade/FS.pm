@@ -16,6 +16,10 @@ Sub::Defer::defer_sub __PACKAGE__ . '::cwd' => sub {
     return sub { shift; goto &Cwd::cwd }
 };
 
+# TODO: sort out conf file methods (or Config::Any etc):
+#   read_json
+#   write_json
+
 #### same RSS/time as redefine-self plus 3.5% more ops ##
 # sub cwd {
 #     require Cwd;
