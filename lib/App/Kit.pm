@@ -131,12 +131,22 @@ For example, once you sprint the localization setup, you can change your class�
 
 =head2 easy mocking (for your tests!)
 
-By default the lazy façade methods are readonly (technically 'rwp' so the calss can fiddle with them internally is it wishes).
+By default the lazy façade methods are readonly (technically 'rwp' so the class can fiddle with them internally if it needs to).
 
-You can change make them readwrite by setting the environment up before the class is built via use().
+You can change make them readwrite via either of 2 mechanisms before the class is built via use().
 
-    BEGIN { $ENV{'App-Kit_RW'} = 1; }
+Either:
+
+    use App::Kit::RW; # must be loaded before App::Kit is use()d
     use App::Kit;
+
+or
+
+    BEGIN { $ENV{'App-Kit_RW'} = 1; };  # must be set before App::Kit is use()d
+    use App::Kit;
+
+then:
+
     …
     $app->log($test_logger); # e.g. say $test_logger stores what level and msg passed to
     … something that should call $app->log->info('This is a terrible info msg.') …
