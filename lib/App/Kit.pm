@@ -147,10 +147,13 @@ or
 
 then:
 
-    …
-    $app->log($test_logger); # e.g. say $test_logger stores what level and msg passed to
+    $app->log($test_logger); # e.g. say $test_logger stores what level and msg are called/given
     … something that should call $app->log->info('This is a terrible info msg.') …
     … test that $test_logger saw the expected levels and msgs …
+
+The former might be desirable if you want to keep ENV clean, the latter for when you want to do/skip certain tests based on if it is true or not:
+
+    App-Kit-RW=1 prove -w t
 
 =head1 INTERFACE
 
