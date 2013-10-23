@@ -1,4 +1,4 @@
-package App::Kit::Facade::NS;
+package App::Kit::Obj::NS;
 
 ## no critic (RequireUseStrict) - Moo does strict/warnings
 use Moo;

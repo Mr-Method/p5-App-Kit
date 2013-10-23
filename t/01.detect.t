@@ -7,7 +7,7 @@ diag("Testing detect() for App::Kit $App::Kit::VERSION");
 my $app = App::Kit->new();
 
 ok( !exists $app->{'detect'}, 'detect not set before called' );
-isa_ok( $app->detect(), 'App::Kit::Facade::Detect' );
+isa_ok( $app->detect(), 'App::Kit::Obj::Detect' );
 ok( exists $app->{'detect'}, 'detect set after called' );
 
 my %meths = (

@@ -72,10 +72,10 @@ is( $app->db->_dbh, undef, 'disconn() undefines main handle' );
 {
     no warnings 'redefine';
     no warnings 'once';
-    local *App::Kit::Facade::DB::_set__dbh = sub { };
+    local *App::Kit::Obj::DB::_set__dbh = sub { };
     my @e = ( 'DBI:foo:database=mydb;host=localhost;', '', '', undef );
     my $n = 'min req keys';
-    local *App::Kit::Facade::DB::conn = sub {
+    local *App::Kit::Obj::DB::conn = sub {
         my ( $o, @c ) = @_;
         is_deeply( \@c, [@e], "dbh() conn builder: $n" );
     };

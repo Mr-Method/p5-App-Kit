@@ -9,8 +9,8 @@ has ns => (
     is => ( $INC{'App/Kit/RW.pm'} || $ENV{'App-Kit_RW'} ? 'rw' : 'rwp' ),
     lazy    => 1,
     default => sub {
-        require App::Kit::Facade::NS;
-        return App::Kit::Facade::NS->new( { base => $_[0] } );
+        require App::Kit::Obj::NS;
+        return App::Kit::Obj::NS->new( { base => $_[0] } );
     },
 );
 
@@ -48,7 +48,7 @@ This role adds one lazy façade method:
 
 =head2 ROLLTODO-METH()
 
-Returns a L<App::Kit::Facade::ROLLTODO-NS> object for reuse after lazy loading the module.
+Returns a L<App::Kit::Obj::ROLLTODO-NS> object for reuse after lazy loading the module.
 
 =head1 DIAGNOSTICS
 
@@ -60,7 +60,7 @@ Requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<Moo::Role>, L<App::Kit::Facade::ROLLTODO-NS>
+L<Moo::Role>, L<App::Kit::Obj::ROLLTODO-NS>
 
 =head1 INCOMPATIBILITIES
 

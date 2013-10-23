@@ -1,4 +1,4 @@
-package App::Kit::Facade::Str;
+package App::Kit::Obj::Str;
 
 ## no critic (RequireUseStrict) - Moo does strict
 use Moo;

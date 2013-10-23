@@ -1,4 +1,4 @@
-package App::Kit::Facade::CType;
+package App::Kit::Obj::CType;
 
 ## no critic (RequireUseStrict) - Moo does strict
 use Moo;

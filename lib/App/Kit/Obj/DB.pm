@@ -1,4 +1,4 @@
-package App::Kit::Facade::DB;
+package App::Kit::Obj::DB;
 
 ## no critic (RequireUseStrict) - Moo does strict
 use Moo;

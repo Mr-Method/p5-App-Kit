@@ -9,12 +9,12 @@ my $app = App::Kit->new;
 my @roles = (
     [ 'Locale' => { isa => 'Locale::Maketext::Utils::Mock::en' } ],
     [ 'HTTP'   => { isa => 'HTTP::Tiny' } ],
-    [ 'NS'     => { isa => 'App::Kit::Facade::NS' } ],
-    [ 'FS'     => { isa => 'App::Kit::Facade::FS' } ],
-    [ 'Str'    => { isa => 'App::Kit::Facade::Str' } ],
-    [ 'CType'  => { isa => 'App::Kit::Facade::CType' } ],
-    [ 'Detect' => { isa => 'App::Kit::Facade::Detect' } ],
-    [ 'DB'     => { isa => 'App::Kit::Facade::DB' } ],
+    [ 'NS'     => { isa => 'App::Kit::Obj::NS' } ],
+    [ 'FS'     => { isa => 'App::Kit::Obj::FS' } ],
+    [ 'Str'    => { isa => 'App::Kit::Obj::Str' } ],
+    [ 'CType'  => { isa => 'App::Kit::Obj::CType' } ],
+    [ 'Detect' => { isa => 'App::Kit::Obj::Detect' } ],
+    [ 'DB'     => { isa => 'App::Kit::Obj::DB' } ],
     [ 'Log'    => { isa => 'Log::Dispatch' } ],
 );
 

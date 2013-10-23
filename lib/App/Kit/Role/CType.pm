@@ -9,8 +9,8 @@ has ctype => (
     is => ( $INC{'App/Kit/RW.pm'} || $ENV{'App-Kit_RW'} ? 'rw' : 'rwp' ),
     lazy    => 1,
     default => sub {
-        require App::Kit::Facade::CType;
-        return App::Kit::Facade::CType->new();
+        require App::Kit::Obj::CType;
+        return App::Kit::Obj::CType->new();
     },
 );
 
@@ -48,7 +48,7 @@ This role adds one lazy façade method:
 
 =head2 ctype()
 
-Returns a L<App::Kit::Facade::CType> object for reuse after lazy loading the module.
+Returns a L<App::Kit::Obj::CType> object for reuse after lazy loading the module.
 
 =head1 DIAGNOSTICS
 
@@ -60,7 +60,7 @@ Requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<Moo::Role>, L<App::Kit::Facade::CType>
+L<Moo::Role>, L<App::Kit::Obj::CType>
 
 =head1 INCOMPATIBILITIES
 

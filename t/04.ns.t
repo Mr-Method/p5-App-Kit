@@ -6,7 +6,7 @@ diag("Testing ns() for App::Kit $App::Kit::VERSION");
 
 my $app = App::Kit->new();
 ok( !exists $INC{'Module/Want.pm'}, 'lazy under pinning not loaded before' );
-isa_ok( $app->ns(), 'App::Kit::Facade::NS' );
+isa_ok( $app->ns(), 'App::Kit::Obj::NS' );
 ok( exists $INC{'Module/Want.pm'}, 'lazy under pinning loaded after' );
 
 ########################
@@ -14,7 +14,7 @@ ok( exists $INC{'Module/Want.pm'}, 'lazy under pinning loaded after' );
 ########################
 
 # base()
-my $class = App::Kit::Facade::NS->new( { base => 'Test::CLASS' } );
+my $class = App::Kit::Obj::NS->new( { base => 'Test::CLASS' } );
 is( $class->base, 'Test::CLASS', 'class based is class' );
 isa_ok( $app->ns->base, ref $app, 'obj based is object' );
 
