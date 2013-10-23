@@ -6,7 +6,7 @@ use Moo::Role;
 our $VERSION = '0.1';
 
 has locale => (
-    is      => 'rw',
+    is => ( $ENV{'App-Kit_RW'} ? 'rw' : 'rwp' ),
     lazy    => 1,
     default => sub {
         require Locale::Maketext::Utils::Mock;

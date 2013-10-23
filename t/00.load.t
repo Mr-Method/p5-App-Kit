@@ -1,4 +1,5 @@
 use Test::More;
+use Test::Exception;
 
 # do these no()'s to ensure they are off before testing App::Kit’s behavior regarding them
 no strict;      ## no critic
@@ -60,10 +61,7 @@ for my $role_ar (@roles) {
     is( ref $app->$has(), $role_hr->{'isa'}, "'$has' returns the expected object" );
     ok( exists $app->{$has}, "'$has' exists after it is called" );
 
-    my $org = $app->$has();
-    is( ref $app->$has( bless {}, 'Foo' ), 'Foo', "'$has' can be set, returns new obj" );
-    is( ref $app->$has(), 'Foo', "'$has' subsequently returns the new object" );
-    $app->$has($org);
+    throws_ok { $app->$has( bless {}, 'Foo' ) } qr/$has is a read-only accessor/, "'$has' is readonly by default";
 }
 
 done_testing;

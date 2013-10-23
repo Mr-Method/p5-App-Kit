@@ -6,7 +6,7 @@ use Moo::Role;
 our $VERSION = '0.1';
 
 has fs => (
-    is      => 'rw',
+    is => ( $ENV{'App-Kit_RW'} ? 'rw' : 'rwp' ),
     lazy    => 1,
     default => sub {
         require App::Kit::Facade::FS;

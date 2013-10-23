@@ -8,6 +8,7 @@ our $VERSION = '0.1';
 sub import {
     strict->import;
     warnings->import;
+
     unless ( defined $_[1] && $_[1] eq '-no-try' ) {    # Yoda was right: there *is* -no-try!
         require Try::Tiny;
 
@@ -130,6 +131,13 @@ For example, once you sprint the localization setup, you can change your class�
 
 =head2 easy mocking (for your tests!)
 
+By default the lazy façade methods are readonly (technically 'rwp' so the calss can fiddle with them internally is it wishes).
+
+You can change make them readwrite by setting the environment up before the class is built via use().
+
+    BEGIN { $ENV{'App-Kit_RW'} = 1; }
+    use App::Kit;
+    …
     $app->log($test_logger); # e.g. say $test_logger stores what level and msg passed to
     … something that should call $app->log->info('This is a terrible info msg.') …
     … test that $test_logger saw the expected levels and msgs …

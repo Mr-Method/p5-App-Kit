@@ -11,7 +11,7 @@ our $VERSION = '0.1';
 #   has _log_reload_check_every => ( is => 'rw', lazy => 1, isa => $isa_digit, default => sub { 30 } );     # not rwp so its easier to test
 
 has log => (
-    is      => 'rw',
+    is => ( $ENV{'App-Kit_RW'} ? 'rw' : 'rwp' ),
     lazy    => 1,
     default => sub {
         require Log::Dispatch::Config;
