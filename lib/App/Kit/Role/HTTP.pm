@@ -6,7 +6,7 @@ use Moo::Role;
 our $VERSION = '0.1';
 
 has http => (
-    is => ( $INC{'App/Kit/RW.pm'} || $ENV{'App-Kit_RW'} ? 'rw' : 'rwp' ),
+    is => ( $INC{'App/Kit/RW.pm'} || $ENV{'App-Kit-RW'} ? 'rw' : 'rwp' ),
     lazy    => 1,
     default => sub {
         require HTTP::Tiny;

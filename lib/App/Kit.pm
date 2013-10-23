@@ -142,7 +142,7 @@ Either:
 
 or
 
-    BEGIN { $ENV{'App-Kit_RW'} = 1; };  # must be set before App::Kit is use()d
+    BEGIN { $ENV{'App-Kit-RW'} = 1; };  # must be set before App::Kit is use()d
     use App::Kit;
 
 then:

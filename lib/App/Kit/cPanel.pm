@@ -5,7 +5,7 @@ use Moo;
 extends 'App::Kit';
 
 has '+log' => (
-    is => ( $ENV{'App-Kit_RW'} ? 'rw' : 'rwp' ),
+    is => ( $ENV{'App-Kit-RW'} ? 'rw' : 'rwp' ),
     lazy    => 1,
     default => sub {
         require Cpanel::Logger;
@@ -14,7 +14,7 @@ has '+log' => (
 );
 
 has '+locale' => (
-    is => ( $ENV{'App-Kit_RW'} ? 'rw' : 'rwp' ),
+    is => ( $ENV{'App-Kit-RW'} ? 'rw' : 'rwp' ),
     lazy    => 1,
     default => sub {
         require Cpanel::Locale;
