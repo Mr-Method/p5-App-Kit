@@ -26,7 +26,6 @@ sub get_ext_of_ctype {
 
 1;
 
-
 =encoding utf-8
 
 =head1 NAME
