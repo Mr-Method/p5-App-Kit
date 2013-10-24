@@ -22,21 +22,21 @@ __END__
 
 =head1 NAME
 
-App::Kit::Role::ROLLTODO-NS - A Lazy Façade method role for ROLLTODO-TEXT
+App::Kit::Role::Locale - A Lazy Façade method role for ROLLTODO-TEXT
 
 =head1 VERSION
 
-This document describes App::Kit::Role::ROLLTODO-NS version 0.1
+This document describes App::Kit::Role::Locale version 0.1
 
 =head1 SYNOPSIS
 
 In your class:
 
-   with 'App::Kit::Role::ROLLTODO-NS';
+   with 'App::Kit::Role::Locale';
 
 Then later in your program:
 
-    $app->ROLLTODO-METH->ROLLTODO-CLASSMETH()
+    $app->locale->ROLLTODO-CLASSMETH()
 
 =head1 DESCRIPTION
 
@@ -46,9 +46,9 @@ Add lazy façade ROLLTODO-TEXT support to your class.
 
 This role adds one lazy façade method:
 
-=head2 ROLLTODO-METH()
+=head2 locale()
 
-Returns a L<App::Kit::Obj::ROLLTODO-NS> object for reuse after lazy loading the module.
+Returns a L<App::Kit::Obj::Locale> object for reuse after lazy loading the module.
 
 =head1 DIAGNOSTICS
 
@@ -60,7 +60,7 @@ Requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<Moo::Role>, L<App::Kit::Obj::ROLLTODO-NS>
+L<Moo::Role>, L<App::Kit::Obj::Locale>
 
 =head1 INCOMPATIBILITIES
 
