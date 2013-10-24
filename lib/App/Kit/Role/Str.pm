@@ -22,7 +22,7 @@ __END__
 
 =head1 NAME
 
-App::Kit::Role::Str - A Lazy Façade method role for ROLLTODO-TEXT
+App::Kit::Role::Str - A Lazy Façade method role for string utilities
 
 =head1 VERSION
 
@@ -36,11 +36,11 @@ In your class:
 
 Then later in your program:
 
-    $app->str->ROLLTODO-CLASSMETH()
+    $app->str->char_count(…)
 
 =head1 DESCRIPTION
 
-Add lazy façade ROLLTODO-TEXT support to your class.
+Add lazy façade string utility support to your class.
 
 =head1 INTERFACE
 

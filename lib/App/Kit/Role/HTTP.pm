@@ -23,7 +23,7 @@ __END__
 
 =head1 NAME
 
-App::Kit::Role::HTTP - A Lazy Façade method role for ROLLTODO-TEXT
+App::Kit::Role::HTTP - A Lazy Façade method role for an HTTP client
 
 =head1 VERSION
 
@@ -37,11 +37,11 @@ In your class:
 
 Then later in your program:
 
-    $app->http->ROLLTODO-CLASSMETH()
+    $app->http->get(…)
 
 =head1 DESCRIPTION
 
-Add lazy façade ROLLTODO-TEXT support to your class.
+Add lazy façade HTTP client support to your class.
 
 =head1 INTERFACE
 

@@ -225,7 +225,7 @@ Lazy façade to a name space utility object via L<App::Kit::Role::NS>.
 
 =head3 $app->http
 
-Lazy façade to an http client object via L<App::Kit::Role::HTTP>.
+Lazy façade to an HTTP client object via L<App::Kit::Role::HTTP>.
 
 =head3 $app->fs
 

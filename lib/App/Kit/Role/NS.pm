@@ -22,7 +22,7 @@ __END__
 
 =head1 NAME
 
-App::Kit::Role::NS - A Lazy Façade method role for ROLLTODO-TEXT
+App::Kit::Role::NS - A Lazy Façade method role for name space utilities
 
 =head1 VERSION
 
@@ -36,11 +36,11 @@ In your class:
 
 Then later in your program:
 
-    $app->ns->ROLLTODO-CLASSMETH()
+    $app->ns->is_ns(…)
 
 =head1 DESCRIPTION
 
-Add lazy façade ROLLTODO-TEXT support to your class.
+Add lazy façade name space utility support to your class.
 
 =head1 INTERFACE
 

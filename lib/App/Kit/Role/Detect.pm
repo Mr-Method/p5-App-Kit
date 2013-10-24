@@ -22,7 +22,7 @@ __END__
 
 =head1 NAME
 
-App::Kit::Role::Detect - A Lazy Façade method role for ROLLTODO-TEXT
+App::Kit::Role::Detect - A Lazy Façade method role for context detection utilities
 
 =head1 VERSION
 
@@ -36,11 +36,11 @@ In your class:
 
 Then later in your program:
 
-    $app->detect->ROLLTODO-CLASSMETH()
+    $app->detect->is_web()
 
 =head1 DESCRIPTION
 
-Add lazy façade ROLLTODO-TEXT support to your class.
+Add lazy façade context detection support to your class.
 
 =head1 INTERFACE
 

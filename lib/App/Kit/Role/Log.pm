@@ -88,7 +88,7 @@ __END__
 
 =head1 NAME
 
-App::Kit::Role::Log - A Lazy Façade method role for ROLLTODO-TEXT
+App::Kit::Role::Log - A Lazy Façade method role for logging
 
 =head1 VERSION
 
@@ -102,11 +102,11 @@ In your class:
 
 Then later in your program:
 
-    $app->log->ROLLTODO-CLASSMETH()
+    $app->log->info(…)
 
 =head1 DESCRIPTION
 
-Add lazy façade ROLLTODO-TEXT support to your class.
+Add lazy façade logging support to your class.
 
 =head1 INTERFACE
 

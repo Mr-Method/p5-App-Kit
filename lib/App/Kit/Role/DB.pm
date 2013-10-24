@@ -22,7 +22,7 @@ __END__
 
 =head1 NAME
 
-App::Kit::Role::DB - A Lazy Façade method role for ROLLTODO-TEXT
+App::Kit::Role::DB - A Lazy Façade method role for database utilities
 
 =head1 VERSION
 
@@ -36,11 +36,11 @@ In your class:
 
 Then later in your program:
 
-    $app->db->ROLLTODO-CLASSMETH()
+    my @record = $app->db->dbh->selectrow_array(…);
 
 =head1 DESCRIPTION
 
-Add lazy façade ROLLTODO-TEXT support to your class.
+Add lazy façade database support to your class.
 
 =head1 INTERFACE 
 
