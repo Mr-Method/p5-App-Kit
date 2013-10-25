@@ -42,33 +42,62 @@ has prefix => (
 
 1;
 
+__END__
+
 =encoding utf-8
 
 =head1 NAME
 
-App::Kit::Obj::FIX - FIX utility object
+App::Kit::Obj::Str - string utility object
 
 =head1 VERSION
 
-This document describes App::Kit::Obj::FIX version 0.1
+This document describes App::Kit::Obj::Str version 0.1
 
 =head1 SYNOPSIS
 
-    $obj->FIX()
+    my $str = App::Kit::Obj::Str->new();
+    $str->char_count(…)
 
 =head1 DESCRIPTION
 
-FIX utility object
+string utility object
 
 =head1 INTERFACE
 
-=head2 FIX()
+=head2 new()
 
-FIX
+Returns the object. takes one optional attribute, 'prefix'.
+
+'prefix' is intended to be used as your app’s prefix string (e.g. a database's table names).
+
+The default is 'appkit'.
+
+Currently it must be between 1 and 6 characters and the characters can only be A-Z, a-z, 0-9.
+
+=head2 char_count()
+
+Lazy wrapper of L<String::UnicodeUTF8>’s char_count().
+
+=head2 bytes_size()
+
+Lazy wrapper of L<String::UnicodeUTF8>’s bytes_size().
+
+=head2 prefix()
+
+Get/Set the prefix attribute.
+
+=head2 portable_crlf()
+
+Returns a portable CRLF. (i.e. \r\n is not portable)
+
+=head2 zero_but_true()
+
+Returns a zero-but-true string.
 
 =head1 DIAGNOSTICS
 
-Throws no warnings or errors of its own.
+Setting the prefix to an invalid value can result in an error that is descriptive of the problem.
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
@@ -76,7 +105,7 @@ Requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<FIX>
+L<String::UnicodeUTF8>
 
 =head1 INCOMPATIBILITIES
 

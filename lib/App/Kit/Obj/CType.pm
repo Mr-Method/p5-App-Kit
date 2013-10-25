@@ -26,6 +26,8 @@ sub get_ext_of_ctype {
 
 1;
 
+__END__
+
 =encoding utf-8
 
 =head1 NAME
@@ -38,13 +40,18 @@ This document describes App::Kit::Obj::CType version 0.1
 
 =head1 SYNOPSIS
 
-    $obj->get_ctype_of_ext($thing)
+    my $ctype = App::Kit::Obj::CType->new()
+    $ctype->get_ctype_of_ext($thing)
 
 =head1 DESCRIPTION
 
 ctype utility object
 
 =head1 INTERFACE
+
+=head2 new()
+
+Returns the object, takes no arguments.
 
 =head2 get_ctype_of_ext(str)
 

@@ -93,29 +93,100 @@ Sub::Defer::defer_sub __PACKAGE__ . '::dbh' => sub {
 
 1;
 
+__END__
+
 =encoding utf-8
 
 =head1 NAME
 
-App::Kit::Obj::FIX - FIX utility object
+App::Kit::Obj::Db - database utility object
 
 =head1 VERSION
 
-This document describes App::Kit::Obj::FIX version 0.1
+This document describes App::Kit::Obj::DB version 0.1
 
 =head1 SYNOPSIS
 
-    $obj->FIX()
+    my $db = App::Kit::Obj::DB->new();
+    $db->dbh()->…
 
 =head1 DESCRIPTION
 
-FIX utility object
+database utility object
 
 =head1 INTERFACE
 
-=head2 FIX()
+=head2 new()
 
-FIX
+Returns the object, takes no arguments.
+
+=head2 dbh()
+
+Returns the main database handle for our app. Reconnecting if necessary.
+
+Lazy loads L<DBI> the first time it is called.
+
+The connection you want is defined via a hashref with the following keys:
+
+=over 4
+
+=item 'dbd_driver' (required)
+
+e.g. SLQite, mysql
+
+=item 'database' (required)
+
+=item 'host' (defaults to 'localhost')
+
+=item 'dsn_attr'
+
+hashref of additional DSN keys and values (built sorted by key)
+
+    { port => 1234 }
+
+=item 'user' (defaults to '')
+
+=item 'pass' (defaults to '')
+
+=item 'connect_attr'
+
+hashref that corresponds to the 4th argument to DBI->connect;
+
+=back
+
+The connections hashref can be given in two ways:
+
+=over 4
+
+=item 1. As the only argument to dbh
+
+    $db->dbh({…})
+
+=item 2. In you app’s config/db.conf
+
+    $db->dbh()
+
+More info on this will be in the next version.
+
+=back
+
+=head2 conn()
+
+Shortcut to DBI->connect(…) or die ….
+
+Takes the same arguments as DBI->connect.
+
+For mysql based objects it additionally does some setup to ensure we’re speaking utf-8 and that datetime operations are normalized to UTC.
+
+Lazy loads L<DBI> the first time it is called.
+
+=head2 disconn()
+
+When given no arguments it disconnects and undefines the main database handle (i.e. the one voa dbh()).
+
+When given a database handle (e.g. one from conn()) it disconnects that.
+
+Returns 2 if it is already disconnected.
 
 =head1 DIAGNOSTICS
 
@@ -127,7 +198,7 @@ Requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<FIX>
+L<DBI>
 
 =head1 INCOMPATIBILITIES
 

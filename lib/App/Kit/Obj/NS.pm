@@ -162,6 +162,8 @@ Sub::Defer::defer_sub __PACKAGE__ . '::sharedir' => sub {
 
 1;
 
+__END__
+
 =encoding utf-8
 
 =head1 NAME
@@ -174,13 +176,18 @@ This document describes App::Kit::Obj::FIX version 0.1
 
 =head1 SYNOPSIS
 
-    $obj->FIX()
+    my $FIX = App::Kit::Obj::FIX->new();
+    $FIX->fix()->…
 
 =head1 DESCRIPTION
 
 FIX utility object
 
 =head1 INTERFACE
+
+=head2 new()
+
+Returns the object, takes no arguments.
 
 =head2 FIX()
 

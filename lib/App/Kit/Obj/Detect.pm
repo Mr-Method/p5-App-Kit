@@ -39,29 +39,48 @@ Sub::Defer::defer_sub __PACKAGE__ . '::is_testing' => sub {
 
 1;
 
+__END__
+
 =encoding utf-8
 
 =head1 NAME
 
-App::Kit::Obj::FIX - FIX utility object
+App::Kit::Obj::Detect - context detection utility object
 
 =head1 VERSION
 
-This document describes App::Kit::Obj::FIX version 0.1
+This document describes App::Kit::Obj::Detect version 0.1
 
 =head1 SYNOPSIS
 
-    $obj->FIX()
+    my $detect = App::Kit::Obj::Detect->new();
+    $detect->is_web()
 
 =head1 DESCRIPTION
 
-FIX utility object
+context detection utility object
 
 =head1 INTERFACE
 
-=head2 FIX()
+=head2 new()
 
-FIX
+Returns the object, takes no arguments.
+
+=head2 is_web()
+
+Lazy wrapper of L<Web::Detect>’s detect_web_fast().
+
+=head2 is_interactive()
+
+Lazy wrapper of L<IO::Interactive::Tiny>’s is_interactive().
+
+=head2 has_net()
+
+Lazy wrapper of L<Net::Detect>’s detect_net().
+
+=head2 is_testing()
+
+Lazy wrapper of L<Test::Detect>’s detect_testing().
 
 =head1 DIAGNOSTICS
 
@@ -73,7 +92,7 @@ Requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<FIX>
+L<Web::Detect>,  L<IO::Interactive::Tiny>, L<Net::Detect>, L<Test::Detect>
 
 =head1 INCOMPATIBILITIES
 
