@@ -107,7 +107,7 @@ This document describes App::Kit::Obj::DB version 0.1
 
 =head1 SYNOPSIS
 
-    my $db = App::Kit::Obj::DB->new();
+    my $db = App::Kit::Obj::DB->new(…);
     $db->dbh()->…
 
 =head1 DESCRIPTION
@@ -118,7 +118,9 @@ database utility object
 
 =head2 new()
 
-Returns the object, takes no arguments.
+Returns the object.
+
+Takes one required attribute: _app. It should be an L<App::Kit> object for it to use internally.
 
 =head2 dbh()
 
