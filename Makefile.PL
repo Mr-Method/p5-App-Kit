@@ -23,7 +23,7 @@ WriteMakefile(
         'File::Path::Tiny'      => 0,
         'File::Temp'            => 0,
         'File::Slurp'           => 0,
-        'File::Iter'            => 0,
+        'Path::Iter'            => 0,
         'File::Spec'            => 0,
         'FindBin'               => 0,
         'File::ShareDir'        => 0,

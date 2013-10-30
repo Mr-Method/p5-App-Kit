@@ -338,7 +338,7 @@ Lazy wrapper of L<File::Slurp>’s write_file().
 
 =head2 get_iterator()
 
-Lazy wrapper of L<File::Iter>’s get_iterator().
+Lazy wrapper of L<Path::Iter>’s get_iterator().
 
 =head1 DIAGNOSTICS
 
@@ -360,7 +360,7 @@ L<Moo> for the object.
 
 Lazy loaded as needed:
 
-L<Cwd> L<File::Path::Tiny> L<File::Temp> L<File::Slurp> L<File::Iter> L<File::Spec> L<FindBin>L<Cwd>
+L<Cwd> L<File::Path::Tiny> L<File::Temp> L<File::Slurp> L<Path::Iter> L<File::Spec> L<FindBin>L<Cwd>
 
 =head1 INCOMPATIBILITIES
 
