@@ -175,13 +175,13 @@ same goes for your App::Kit based object:
 
 =head3 new()
 
-Since the idea of this class is to share the objects it makes more sence to use multiton()/instance() in your code.
+Since the idea of this class is to share the objects it makes more sense to use multiton()/instance() in your code.
 
-Returns a new object everytime. Takes no arguments currently.
+Returns a new object every time. Takes no arguments currently.
 
 =head3 multiton()
 
-Returns the same object on subsequent calls using the same arguments. Since, there are currently no argments it is essentially a singleton.
+Returns the same object on subsequent calls using the same arguments. Since, there are currently no arguments it is essentially a singleton.
 
 See L<Role::Multiton> for more details.
 

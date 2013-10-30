@@ -167,8 +167,10 @@ has spec => (
 );
 
 has bindir => (
-    'is'      => 'rw',
-    'lazy'    => '1',
+    'is'   => 'rw',
+    'lazy' => '1',
+
+    # 'isa'     => sub { die "'bindir' must be a directory" unless -d $_[1] },
     'default' => sub {
         require FindBin;
         require Cwd;
@@ -179,7 +181,7 @@ has bindir => (
 has inc => (
     'is'      => 'rw',
     'default' => sub { [] },
-    'isa'     => sub { die "inc must be an array ref" unless ref( $_[0] ) eq 'ARRAY' },
+    'isa'     => sub { die "'inc' must be an array ref" unless ref( $_[0] ) eq 'ARRAY' },
 );
 
 # has starting_dir => (
@@ -229,34 +231,124 @@ __END__
 
 =head1 NAME
 
-App::Kit::Obj::FIX - FIX utility object
+App::Kit::Obj::FS - file system utility object
 
 =head1 VERSION
 
-This document describes App::Kit::Obj::FIX version 0.1
+This document describes App::Kit::Obj::FS version 0.1
 
 =head1 SYNOPSIS
 
-    my $FIX = App::Kit::Obj::FIX->new();
-    $FIX->fix()->…
+    my $fs = App::Kit::Obj::FS->new();
+    my @guts = $fs->read_file(…);
 
 =head1 DESCRIPTION
 
-FIX utility object
+file system utility object
 
 =head1 INTERFACE
 
 =head2 new()
 
-Returns the object, takes no arguments.
+Returns the object.
 
-=head2 FIX()
+Takes one required attribute: _app. It should be an L<App::Kit> object for it to use internally.
 
-FIX
+Has 3 optional attributes:
+
+=head3 spec
+
+Lazy loads L<File::Spec> and returns the class accessor for L<File::Spec> methods. Setting this via new() is probably not a good idea.
+
+    my $dir = $fs->spec->catdir(…);
+
+=head3 bindir
+
+The applications main directory. Defaults to script’s directory or the current working directory.
+
+Lazy loads L<FindBin> and L<Cwd>.
+
+=head3 inc
+
+An array ref of paths for file_lookup() to use. Defaults to [].
+
+=head2 cwd()
+
+Lazy wrapper of L<Cwd>’s cwd().
+
+=head2 file_lookup()
+
+In scalar context returns the first path that exists for the given arguments.
+
+In array context returns all possible paths for the given arguments without any existence check.
+
+The final argument can be a config hashref with the inc key whose value is an array of paths.
+
+The arguments are the pieces of the path you are interested in that get put together in a portable way.
+
+    my $conf = $fs->file_lookup('data', 'foo.json'); # e.g. …/my_app_base/.appkit.d/data/foo.json
+
+The path is looked for in this order:
+
+=over 4
+
+1. the 'inc' paths in the given argument if any
+
+2. a directory in the object’s base path called .$prefix.d (where $prefix is the _app attributes’s ->str->prefix).
+
+3. the objects’s inc attribute
+
+=back
+
+=head2 mkpath()
+
+Lazy wrapper of L<File::Path::Tiny>’s mk().
+
+=head2 rmpath()
+
+Lazy wrapper of L<File::Path::Tiny>’s rm().
+
+=head2 empty_dir()
+
+Lazy wrapper of L<File::Path::Tiny>’s empty_dir().
+
+=head2 mk_parent()
+
+Lazy wrapper of L<File::Path::Tiny>’s mk_parent().
+
+=head2 tmpfile()
+
+Lazy wrapper of L<File::Temp>’s tmpfile().
+
+=head2 tmpdir()
+
+Lazy wrapper of L<File::Temp>’s tmpdir().
+
+=head2 read_dir()
+
+Lazy wrapper of L<File::Slurp>’s read_dir().
+
+=head2 read_file()
+
+Lazy wrapper of L<File::Slurp>’s read_file().
+
+=head2 write_file()
+
+Lazy wrapper of L<File::Slurp>’s write_file().
+
+=head2 get_iterator()
+
+Lazy wrapper of L<File::Iter>’s get_iterator().
 
 =head1 DIAGNOSTICS
 
-Throws no warnings or errors of its own.
+=over
+
+=item C<< 'inc' must be an array ref >>
+
+The value given for 'inc' was not an array ref.
+
+=back
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
@@ -264,7 +356,11 @@ Requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<FIX>
+L<Moo> for the object.
+
+Lazy loaded as needed:
+
+L<Cwd> L<File::Path::Tiny> L<File::Temp> L<File::Slurp> L<File::Iter> L<File::Spec> L<FindBin>L<Cwd>
 
 =head1 INCOMPATIBILITIES
 

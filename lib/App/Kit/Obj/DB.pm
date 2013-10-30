@@ -34,7 +34,9 @@ has _app => (
 );
 
 has _dbh => (
-    is      => 'rwp',
+    is => 'rwp',
+
+    # isa => sub { die "'_dbh' must be a DBI::db object\n" unless ref $_[0] eq 'DBI::db' },
     default => sub { undef },
 );
 
@@ -122,6 +124,8 @@ Returns the object.
 
 Takes one required attribute: _app. It should be an L<App::Kit> object for it to use internally.
 
+Takes one optional and discouraged attribute: _dbh. Should be a L<DBI::db> object.
+
 =head2 dbh()
 
 Returns the main database handle for our app. Reconnecting if necessary.
@@ -134,7 +138,7 @@ The connection you want is defined via a hashref with the following keys:
 
 =item 'dbd_driver' (required)
 
-e.g. SLQite, mysql
+e.g. SQLite, mysql
 
 =item 'database' (required)
 
@@ -184,7 +188,7 @@ Lazy loads L<DBI> the first time it is called.
 
 =head2 disconn()
 
-When given no arguments it disconnects and undefines the main database handle (i.e. the one voa dbh()).
+When given no arguments it disconnects and undefines the main database handle (i.e. the one via dbh()).
 
 When given a database handle (e.g. one from conn()) it disconnects that.
 

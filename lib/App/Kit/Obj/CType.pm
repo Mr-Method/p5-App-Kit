@@ -1,7 +1,7 @@
 package App::Kit::Obj::CType;
 
-use strict;
-use warnings;
+## no critic (RequireUseStrict) - Moo does strict
+use Moo;
 
 our $VERSION = '0.1';
 

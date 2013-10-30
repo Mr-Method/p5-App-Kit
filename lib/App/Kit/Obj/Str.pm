@@ -67,11 +67,11 @@ string utility object
 
 =head2 new()
 
-Returns the object. takes one optional attribute, 'prefix'.
+Returns the object. takes one optional attribute, “prefix”.
 
-'prefix' is intended to be used as your app’s prefix string (e.g. a database's table names).
+“prefix” is intended to be used as your app’s prefix string (e.g. a database's table names).
 
-The default is 'appkit'.
+The default is “appkit”.
 
 Currently it must be between 1 and 6 characters and the characters can only be A-Z, a-z, 0-9.
 

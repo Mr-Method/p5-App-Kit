@@ -10,7 +10,7 @@ has base => (
     required => 1,
     isa      => sub {
         require Module::Want;
-        die "'base' must ne a valid namespace or object\n" unless Module::Want::is_ns( $_[0] ) || Module::Want::is_ns( ref $_[0] );
+        die "'base' must be a valid namespace or object\n" unless Module::Want::is_ns( $_[0] ) || Module::Want::is_ns( ref $_[0] );
     },
 );
 
@@ -31,15 +31,15 @@ Sub::Defer::defer_sub __PACKAGE__ . '::employ' => sub {
 # $app->ns->absorb("Foo::Bar:zong", …); $app->zong (and, FWIW, App->zong)
 sub absorb {
     my $self = shift;
+    my $base = ref( $self->base ) || $self->base;
     no strict 'refs';    ## no critic
     for my $full_ns (@_) {
-        my $base = ref( $self->base ) || $self->base;
         my $func = $self->normalize_ns($full_ns);    # or ??
 
         if ( $func =~ m/(.+)::([^:]+)$/ ) {
             my $ns = $1;
             $func = $2;
-            $self->have_mod($ns);    # or ???
+            $self->have_mod($ns);                    # or ???
         }
 
         *{ $base . '::' . $func } = sub {
@@ -168,34 +168,93 @@ __END__
 
 =head1 NAME
 
-App::Kit::Obj::FIX - FIX utility object
+App::Kit::Obj::NS - Name space utility object
 
 =head1 VERSION
 
-This document describes App::Kit::Obj::FIX version 0.1
+This document describes App::Kit::Obj::NS version 0.1
 
 =head1 SYNOPSIS
 
-    my $FIX = App::Kit::Obj::FIX->new();
-    $FIX->fix()->…
+    my $ns = App::Kit::Obj::NS->new(…);
+    $ns->ns()->have_mod(…)
 
 =head1 DESCRIPTION
 
-FIX utility object
+name space utility object
 
 =head1 INTERFACE
 
 =head2 new()
 
-Returns the object, takes no arguments.
+Returns the object.
 
-=head2 FIX()
+Takes one required attribute: base. It should be an object or name space that it uses for the default “'base' related” methods.
 
-FIX
+=head3 base
+
+Get and set the object’s base attribute
+
+    my $base = $ns->base;
+    $ns->base($obj);
+
+=head2 have_mod()
+
+Lazy wrapper of L<Module::Want>’s have_mod().
+
+=head2 is_ns()
+
+Lazy wrapper of L<Module::Want>’s is_ns().
+
+=head2 normalize_ns()
+
+Lazy wrapper of L<Module::Want>’s normalize_ns().
+
+=head2 ns2distname()
+
+Lazy wrapper of L<Module::Want>’s ns2distname().
+
+=head2 distname2ns()
+
+Lazy wrapper of L<Module::Want>’s distname2ns().
+
+=head2 sharedir()
+
+Lazy wrapper of L<File::ShareDir>’s sharedir() that returns false instead of throwing exception (in that case $@ will be set).
+
+=head2 caller related
+
+=head3 enable(FNS)
+
+Takes one or more full name spaces to functions and enables them directly in the current package, loading the module if necessary.
+
+    $app->ns->enable('Foo::Bar::zing')
+    zing(…); # zing() is from Foo::Bar
+
+=head2 'base' related
+
+Eventually the 'base' to use will also be able to be given in the call to the method. For now, it must be set via the base attribute.
+
+=head3 employ(ROLE)
+
+Takes one or more role name spaces or objects and employs them in base via L<Role::Tiny>}s apply_* methods (depending on what base is).
+
+=head3 absorb(FNS)
+
+Takes one or more full name spaces to functions and absorbs them directly into whatever base is. Taking into account that it was a function and now is a method.
+
+    $app->ns->enable('Foo::Bar::zing')
+    $base->zing(…); # zing() is from Foo::Bar
 
 =head1 DIAGNOSTICS
 
-Throws no warnings or errors of its own.
+=over
+
+=item C<< 'base' must be a valid namespace or object >>
+
+The value you gave for base, either via new or via base(), is not a name space or an object.
+
+=back
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
@@ -203,7 +262,11 @@ Requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<FIX>
+L<Moo> for the object.
+
+Lazy loaded as needed:
+
+L<Module::Want> L<File::ShareDir> L<Role::Tiny>
 
 =head1 INCOMPATIBILITIES
 
