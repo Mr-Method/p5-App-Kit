@@ -16,6 +16,7 @@ my $builder = Module::Build->new(
         'Moo'                   => 0,
         'Moo::Role'             => 0,
         'Role::Tiny'            => 0,
+        'Role::Multiton'        => 0,
         'File::Path::Tiny'      => 0.7,
         'Module::Want'          => 0.6,
         'Cwd'                   => 0,

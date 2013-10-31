@@ -1,4 +1,7 @@
 Revision history for App-Kit
 
+0.2  2013-10-31 08:42:21
+       add Role::Multiton to deps
+
 0.1  2013-05-22 21:12:21
        Initial release.
