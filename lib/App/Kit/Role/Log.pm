@@ -114,7 +114,9 @@ This role adds one lazy façade method:
 
 =head2 log()
 
-Returns a L<App::Kit::Obj::Log> object for reuse after lazy loading the module.
+Returns a L<Log::Dispatch> object for reuse after lazy loading the module.
+
+TODO: config file and defaults info
 
 =head1 DIAGNOSTICS
 
@@ -126,7 +128,7 @@ Requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<Moo::Role>, L<App::Kit::Obj::Log>
+L<Moo::Role>, L<Log::Dispatch>, L<Log::Dispatch::Config>
 
 =head1 INCOMPATIBILITIES
 

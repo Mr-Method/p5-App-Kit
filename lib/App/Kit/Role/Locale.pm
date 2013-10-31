@@ -48,7 +48,7 @@ This role adds one lazy façade method:
 
 =head2 locale()
 
-Returns a L<App::Kit::Obj::Locale> object for reuse after lazy loading the module.
+Returns a L<Locale::Maketext::Utils::Mock> object for reuse after lazy loading the module.
 
 =head1 DIAGNOSTICS
 
@@ -60,7 +60,7 @@ Requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<Moo::Role>, L<App::Kit::Obj::Locale>
+L<Moo::Role>, L<Locale::Maketext::Utils::Mock>
 
 =head1 INCOMPATIBILITIES
 

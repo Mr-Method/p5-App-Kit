@@ -49,7 +49,9 @@ This role adds one lazy façade method:
 
 =head2 http()
 
-Returns a L<App::Kit::Obj::HTTP> object for reuse after lazy loading the module.
+Returns a L<HTTP::Tiny> object for reuse after lazy loading the module.
+
+L<HTTP::Tiny::Multipart> is also loaded if it is available.
 
 =head1 DIAGNOSTICS
 
@@ -61,7 +63,7 @@ Requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<Moo::Role>, L<App::Kit::Obj::HTTP>
+L<Moo::Role>, L<HTTP::Tiny>
 
 =head1 INCOMPATIBILITIES
 
