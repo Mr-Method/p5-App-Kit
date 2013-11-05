@@ -1,6 +1,6 @@
 Revision history for App-Kit
 
-???
+0.3  2013-11-05 22:13:31
     - add DBD::SQLite to deps (including Perl::DependList comment notation for it to be found)
     - other dep fixups in prep for Perl-DependList based release testing support
 
