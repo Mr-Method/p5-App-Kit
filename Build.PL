@@ -32,6 +32,7 @@ my $builder = Module::Build->new(
         'Import::Into'            => 0,
         'MIME::Types'             => 0,
         'DBI'                     => 0,
+        'DBD::SQLite'             => 0,
         'Web::Detect'             => 0,
         'IO::Interactive::Tiny'   => 0,
         'Net::Detect'             => 0,

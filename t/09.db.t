@@ -12,14 +12,14 @@ my $sqlite_x = $app->fs->spec->catdir( $dir, 'extra_db' );
 my $sqlite_m = $app->fs->spec->catdir( $dir, 'main_db' );
 
 ok( !exists $INC{'DBI.pm'}, 'Sanity: DBI not loaded before conn()' );
-my $x_dbh = $app->db->conn("DBI:SQLite:$sqlite_x");    # no need for  "", "" w/ SQLite as that is the default!
+my $x_dbh = $app->db->conn("DBI:SQLite:$sqlite_x");    # no need for  "", "" w/ SQLite as that is the default! # Perl::DependList::get_deps(DBD::SQLite)
 isa_ok( $x_dbh, 'DBI::db', 'conn() meth returns dbh' );
 ok( exists $INC{'DBI.pm'}, 'DBI lazy loaded on initial conn()' );
 
 my $m_dbh;
 {
     # DBI can no teasily be unloaded so we do that test in another test file
-    $m_dbh = $app->db->dbh( { 'database' => $sqlite_m, 'dbd_driver' => 'SQLite' } );
+    $m_dbh = $app->db->dbh( { 'database' => $sqlite_m, 'dbd_driver' => 'SQLite' } );    # Perl::DependList::get_deps(DBD::SQLite)
     isa_ok( $m_dbh, 'DBI::db', 'dbh() meth returns dbh' );
     is( $m_dbh, $app->db->dbh(), 'dbh() returns same object' );
 }
