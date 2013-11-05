@@ -10,7 +10,7 @@ has http => (
     lazy    => 1,
     default => sub {
         require HTTP::Tiny;
-        eval { require HTTP::Tiny::Multipart };    # enable multipart support if possible, otherwise be silent
+        eval { require HTTP::Tiny::Multipart };    # enable multipart support if possible, otherwise be silent # Perl::DependList-NO_DEP(HTTP::Tiny::Multipart)
         return HTTP::Tiny->new();
     },
 );

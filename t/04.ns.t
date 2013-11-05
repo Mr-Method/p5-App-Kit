@@ -138,8 +138,8 @@ is_deeply(
 );
 
 is_deeply(
-    [ $app->ns->have_mod('CGI') ],
-    [ Module::Want::have_mod('CGI') ],
+    [ $app->ns->have_mod('CGI') ],        # Perl::DependList-NO_DEP(CGI)
+    [ Module::Want::have_mod('CGI') ],    # Perl::DependList-NO_DEP(CGI)
     'normalize_ns() returns the same as its lazy under pinning'
 );
 

@@ -9,7 +9,7 @@ has locale => (
     is => ( $INC{'App/Kit/RW.pm'} || $ENV{'App-Kit-RW'} ? 'rw' : 'rwp' ),
     lazy    => 1,
     default => sub {
-        require Locale::Maketext::Utils::Mock;
+        require Locale::Maketext::Utils::Mock;    # Perl::DependList-IS_DEP(Locale::Maketext::Utils)
         return Locale::Maketext::Utils::Mock->get_handle();
     },
 );

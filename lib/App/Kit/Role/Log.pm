@@ -14,6 +14,7 @@ has log => (
     is => ( $INC{'App/Kit/RW.pm'} || $ENV{'App-Kit-RW'} ? 'rw' : 'rwp' ),
     lazy    => 1,
     default => sub {
+        require Log::Dispatch;
         require Log::Dispatch::Config;
 
         # ro-NOOP: my ($app, %new) = @_;

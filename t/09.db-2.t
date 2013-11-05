@@ -11,7 +11,7 @@ my $dir = $app->fs->tmpdir();
 my $sqlite = $app->fs->spec->catdir( $dir, 'db' );
 
 ok( !exists $INC{'DBI.pm'}, 'Sanity: DBI not loaded before dbh()' );
-my $m_dbh = $app->db->dbh( { 'database' => $sqlite, 'dbd_driver' => 'SQLite' } );    # Perl::DependList::get_deps(DBD::SQLite)
+my $m_dbh = $app->db->dbh( { 'database' => $sqlite, 'dbd_driver' => 'SQLite' } );    # Perl::DependList-IS_DEP(DBD::SQLite)
 ok( exists $INC{'DBI.pm'}, 'DBI lazy loaded on initial dbh()' );
 isa_ok( $m_dbh, 'DBI::db', 'dbh() meth returns dbh' );
 is( $m_dbh, $app->db->dbh(), 'dbh() returns same object' );
