@@ -43,7 +43,7 @@ SKIP: {
 
     $class->absorb('MIME::Base64::decode_base64');
     ok( $class->base->can('decode_base64'), 'absorb() class ok' );
-    is( $class->base->decode_base64("foo"), MIME::Base64::decode_base64("foo"), "new method works like its function" );
+    is( $class->base->decode_base64("Zm9v"), MIME::Base64::decode_base64("Zm9v"), "new method works like its function" );
 }
 
 # impose()
