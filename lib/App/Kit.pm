@@ -3,7 +3,7 @@ package App::Kit;
 ## no critic (RequireUseStrict) - Moo does strict and warnings
 use Moo;
 
-our $VERSION = '0.3';
+our $VERSION = '0.4';
 
 sub import {
     strict->import;
@@ -44,7 +44,7 @@ App::Kit - A Lazy Façade to simplify your code/life
 
 =head1 VERSION
 
-This document describes App::Kit version 0.3
+This document describes App::Kit version 0.4
 
 =head1 SYNOPSIS
 
