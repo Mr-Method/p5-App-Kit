@@ -15,8 +15,8 @@ like( $@, qr/Global symbol "\$x" requires explicit package name/, 'strict enable
     local $SIG{__WARN__} = sub {
         $warn = join( '', @_ );
     };
-    eval 'print @X[0]';
-    like( $warn, qr/Scalar value \@x\[0\] better written as \$x\[0\]/i, 'warnings enabled still under -no-try' );
+    eval 'my $foo=1;42/99;$foo=2;';
+    like( $warn, qr/Useless use of a constant \(.*\) in void context/i, 'warnings enabled still under -no-try' );
 }
 
 done_testing;

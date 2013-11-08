@@ -1,5 +1,9 @@
 Revision history for App-Kit
 
+???
+    - made 'warnings enabled' tests work on perl 5.19
+    - Add Devel::Kit to deps so its available to us when we're developing
+
 0.3  2013-11-05 22:13:31
     - add DBD::SQLite to deps (including Perl::DependList comment notation for it to be found)
     - other dep fixups in prep for Perl-DependList based release testing support

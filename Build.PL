@@ -41,6 +41,7 @@ my $builder = Module::Build->new(
         'Locale::Maketext::Utils::Mock' => 0,
         'Log::Dispatch'                 => 0,
         'Log::Dispatch::Config'         => 0,
+        'Devel::Kit'                    => 0,
     },
     add_to_cleanup => ['App-Kit-*'],
 );
