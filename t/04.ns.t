@@ -160,12 +160,16 @@ is_deeply(
 ######################
 
 # $app->ns->sharedir
-ok( !exists $INC{'File/ShareDir.pm'}, 'Sanity: File::ShareDir not loaded before sharedir()' );
-is $app->ns->sharedir("Foo-Bar"), undef, 'sharedir() bad dist = undef';
-like $@, qr/Failed to find share dir for dist 'Foo-Bar'/, 'sharedir() bad dist - $@';
-ok( exists $INC{'File/ShareDir.pm'}, 'File::ShareDir lazy loaded on initial sharedir()' );
-is $app->ns->sharedir("Foo::Bar"), undef, 'sharedir() unloaded module = undef';
-like $@, qr/Failed to find share dir for dist 'Foo-Bar'/, 'sharedir() unloaded module - $@';
+SKIP: {
+    skip "That is weird: fake module Foo::Bar exists, skipping non-existent module check", 6 if $app->ns->have_mod('Foo::Bar');
+
+    ok( !exists $INC{'File/ShareDir.pm'}, 'Sanity: File::ShareDir not loaded before sharedir()' );
+    is $app->ns->sharedir("Foo-Bar"), undef, 'sharedir() bad dist = undef';
+    like $@, qr/Failed to find share dir for dist 'Foo-Bar'/, 'sharedir() bad dist - $@';
+    ok( exists $INC{'File/ShareDir.pm'}, 'File::ShareDir lazy loaded on initial sharedir()' );
+    is $app->ns->sharedir("Foo::Bar"), undef, 'sharedir() unloaded module = undef';
+    like $@, qr/Failed to find share dir for dist 'Foo-Bar'/, 'sharedir() unloaded module - $@';
+}
 
 # TODO test dist that does have share dir,  unloaded and loaded
 # TODO test module that does have share dir, unloaded and loaded
