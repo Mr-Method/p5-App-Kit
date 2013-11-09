@@ -42,6 +42,8 @@ my $builder = Module::Build->new(
         'Log::Dispatch'                 => 0,
         'Log::Dispatch::Config'         => 0,
         'Devel::Kit'                    => 0,
+        'YAML::Syck'                    => 0,
+        'JSON::Syck'                    => 0,
     },
     add_to_cleanup => ['App-Kit-*'],
 );

@@ -261,4 +261,81 @@ $app->fs->write_file( $app->fs->spec->catfile( $hack_dir_c, 'fiddle.conf' ), 'ho
 $file = $app->fs->file_lookup( 'config', 'fiddle.conf', { inc => [ 'myhack', $hack_dir ], } );
 is( $file, $app->fs->spec->catfile( $hack_dir_c, 'fiddle.conf' ), 'file_lookup() in scalar returns first file found inc arg (inc arg)' );
 
+#####################
+#### YAML and JSON ##
+#####################
+
+my $yaml_file = $app->fs->spec->catfile( $hack_dir, 'my.yaml' );
+my $json_file = $app->fs->spec->catfile( $hack_dir, 'my.json' );
+
+my $my_data = {
+    'str'   => 'I am a string.',
+    'true'  => 1,
+    'false' => 0,
+    'undef' => undef,
+    'empty' => "",
+    'hash'  => {
+        'nested' => {
+            zop => 'bar',
+        },
+        'array' => [qw(a b c 42)],
+    },
+    'utf8' => 'I ♥ Perl',
+    'int'  => int(42.42),
+    'abs'  => abs(42.42),
+};
+
+my $yaml_cont = q{--- 
+"abs": '42.42'
+"empty": ''
+"false": 0
+"hash": 
+  "array": 
+    - 'a'
+    - 'b'
+    - 'c'
+    - 42
+  "nested": 
+    "zop": 'bar'
+"int": 42
+"str": 'I am a string.'
+"true": 1
+"undef": ~
+"utf8": "I ♥ Perl"
+};
+
+#### YAML ##
+
+ok( $app->fs->yaml_write( $yaml_file, $my_data ), 'yaml_write returns true on success' );
+is( $app->fs->read_file($yaml_file), $yaml_cont, 'yaml_write had expected content written' );
+
+my $data = $app->fs->yaml_read($yaml_file);
+is_deeply( $data, $my_data, 'yaml_read loads expected data' );
+
+ok( $app->fs->yaml_write( $yaml_file, $data ), 'yaml_write returns true on success again' );
+is( $app->fs->read_file($yaml_file), $yaml_cont, 'yaml_write had expected content written' );
+
+$data = $app->fs->yaml_read($yaml_file);
+is_deeply( $data, $my_data, 'yaml_read loads expected data again' );
+
+dies_ok { $app->fs->yaml_write($hack_dir) } 'yaml_write dies on failure';
+dies_ok { $app->fs->yaml_read( $$ . 'asfvadfvdfva' . time ) } 'yaml_read dies on failure';
+
+#### JSON ##
+
+ok( $app->fs->json_write( $json_file, $my_data ), 'json_write returns true on success' );
+like( $app->fs->read_file($json_file), qr/"utf8": "I ♥ Perl"/, 'json_write had expected content written' );    # string can change, no way to SortKeys like w/ YAML::Syck, so just make sure utf8 not written in escape syntax
+
+$data = $app->fs->json_read($json_file);
+is_deeply( $data, $my_data, 'json_read loads expected data' );
+
+ok( $app->fs->json_write( $json_file, $data ), 'json_write returns true on success again' );
+like( $app->fs->read_file($json_file), qr/"utf8": "I ♥ Perl"/, 'json_write had expected content written' );    # string can change, no way to SortKeys like w/ YAML::Syck, so just make sure utf8 not written in escape syntax
+
+$data = $app->fs->json_read($json_file);
+is_deeply( $data, $my_data, 'json_read loads expected data again' );
+
+dies_ok { $app->fs->json_write($hack_dir) } 'json_write dies on failure';
+dies_ok { $app->fs->json_read( $$ . 'asfvadfvdfva' . time ) } 'json_read dies on failure';
+
 done_testing;

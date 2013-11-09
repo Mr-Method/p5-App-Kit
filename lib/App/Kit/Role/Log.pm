@@ -51,7 +51,7 @@ has log => (
         else {
             return Log::Dispatch->new(
                 outputs => [ [ "Screen", min_level => "notice", "newline" => 1 ] ],
-                callbacks => sub {
+                callbacks => sub {    # ? TODO break this out into a thing consumable by Log::Dispatch::Config above ?
                     my %info = @_;
 
                     my $short = $info{'level'};
@@ -75,7 +75,7 @@ has log => (
                     # TODO: format via $app->output e.g.:
                     # return $app->output->current_indent() . $app->output->short_indent() . $app->output->class($short, $info{'level'}) . ' ' . $app->output->class($time_stamp, 'dim') . $app->output->short_indent() . $app->output->class($info{message}, 'code');
                     return "$tap  $short $time_stamp  $info{message}";
-                }
+                },
             );
         }
     },
@@ -117,7 +117,21 @@ This role adds one lazy façade method:
 
 Returns a L<Log::Dispatch> object for reuse after lazy loading the module.
 
-TODO: config file and defaults info
+By default it goes to “Screen” with a minimum level of “notice” and “newline” set to true. The output will be tap safe when run under testing.
+
+The format (after a # for TAP if applicable) and 2 spaces is space separated string of:
+
+=over 4
+
+=item 1. Unicode SQUARE LOG character (bytes == \xe3\x8f\x92), non-break-space (bytes == \xc2\xa0), followed by a one letter version of the level (emerg is M since error already has dibs on E).
+
+=item 2. datetime stamp (YYYY-MM-DD and HH:MM:SS connected via non-break-space (bytes == \xc2\xa0)).
+
+=item 3. The log message.
+
+=back
+
+You can configure it anyway you like via your app’s config/log.conf (i.e. $app->fs->file_lookup( 'config', 'log.conf' )).
 
 =head1 DIAGNOSTICS
 

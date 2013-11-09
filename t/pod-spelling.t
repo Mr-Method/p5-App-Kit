@@ -61,3 +61,16 @@ datetime
 dbh
 utf
 
+conf
+param
+params
+
+JSON
+YAML
+
+'log
+YYYY
+conf'
+emerg
+
+DBI

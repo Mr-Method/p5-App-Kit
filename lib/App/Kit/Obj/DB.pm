@@ -33,6 +33,12 @@ has _app => (
     required => 1,
 );
 
+has dbh_is_still_good_check => (                   # e.g. only ping() every N calls/seconds
+    is  => 'rw',
+    isa => sub { die "'dbh_is_still_good_check' must be undef or a coderef" unless !defined $_[0] || ref $_[0] eq 'CODE' },
+    default => sub { undef },
+);
+
 has _dbh => (
     is => 'rwp',
 
@@ -66,18 +72,31 @@ Sub::Defer::defer_sub __PACKAGE__ . '::dbh' => sub {
     return sub {
         my ( $self, $dbi_conf ) = @_;
 
-        if ( !$self->_dbh || !$self->_dbh->ping ) {    # TODO: only ping() every N calls/seconds
+        if ( !$self->_dbh || ( defined $self->dbh_is_still_good_check ? !$self->dbh_is_still_good_check->( $self->_dbh ) : !$self->_dbh->ping ) ) {
             if ( !$dbi_conf ) {
-                my $file = $self->_app->fs->file_lookup( 'config', 'db.conf' );
+                my $file = $self->_app->fs->file_lookup( 'config', 'db.yaml' );
                 if ($file) {
-                    $dbi_conf = {};                    # TODO: sort out conf file methods  (or Config::Any etc): $self->_app->fs->read_json($file);
+                    $dbi_conf = $self->_app->fs->yaml_read($file);    # Config::Any seems like over kill, no?
+                    if ( ref($dbi_conf) ne 'HASH' ) {
+                        die "no db conf in app configuration\n";
+                    }
                 }
                 else {
-                    die "no dbi_conf in arguments or app configuration\n";
+                    die "no db conf in arguments or app configuration\n";
                 }
             }
 
             $dbi_conf->{'host'} ||= 'localhost';
+
+            if ( !$dbi_conf->{'dbd_driver'} && !$dbi_conf->{'database'} ) {
+                die 'missing required dbd_driver and database';
+            }
+            elsif ( !$dbi_conf->{'dbd_driver'} ) {
+                die 'missing required dbd_driver';
+            }
+            elsif ( !$dbi_conf->{'database'} ) {
+                die 'missing required database';
+            }
 
             my @connect = (
                 "DBI:$dbi_conf->{'dbd_driver'}:database=$dbi_conf->{'database'};host=$dbi_conf->{'host'};" . join( ';', map { "$_=$dbi_conf->{'dsn_attr'}{$_}" } sort keys %{ $dbi_conf->{'dsn_attr'} } ),    # TODO/YAGNI: dictate order ?
@@ -126,6 +145,18 @@ Takes one required attribute: _app. It should be an L<App::Kit> object for it to
 
 Takes one optional and discouraged attribute: _dbh. Should be a L<DBI::db> object.
 
+=head3 dbh_is_still_good_check
+
+Default is undef.
+
+This attribute can be set to a coderef that takes a DBI object and returns true if it is still good or false otherwise.
+
+If set this is used by dbh() instead of $dbh->ping() to determine if the handle is still good.
+
+You could use this, for example, to still do $dbh->ping but only every so many calls to dbh() or only after so many seconds.
+
+Can be unset by passing it undef.
+
 =head2 dbh()
 
 Returns the main database handle for our app. Reconnecting if necessary.
@@ -168,11 +199,9 @@ The connections hashref can be given in two ways:
 
     $db->dbh({…})
 
-=item 2. In you app’s config/db.conf
+=item 2. In your app’s config/db.yaml
 
-    $db->dbh()
-
-More info on this will be in the next version.
+    $db->dbh() # uses $app->fs->file_lookup('config', 'db.yaml')
 
 =back
 
@@ -196,7 +225,35 @@ Returns 2 if it is already disconnected.
 
 =head1 DIAGNOSTICS
 
-Throws no warnings or errors of its own.
+=over
+
+=item C<< no db conf in arguments or app configuration >>
+
+dbh() was given no data and there is no config file
+
+=item C<< no db conf in app configuration >>
+
+dbh() was given no data and the config file does not contain a hash
+
+=item C<< missing required dbd_driver and database >>
+
+the dbh() hash (from args or conf file) is missing both required params
+
+=item C<< missing required database >>
+
+the dbh() hash (from args or conf file) is missing the required database param
+
+=item C<< missing required dbd_driver >>
+
+the dbh() hash (from args or conf file) is missing the required dbd_driver param
+
+=item C<< Could not connect to database: %s >>
+
+conn() throws this when its DBI->connect() fails
+
+%s is DBI->errstr
+
+=back
 
 =head1 CONFIGURATION AND ENVIRONMENT
 

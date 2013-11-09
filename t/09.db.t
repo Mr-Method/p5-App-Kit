@@ -18,7 +18,7 @@ ok( exists $INC{'DBI.pm'}, 'DBI lazy loaded on initial conn()' );
 
 my $m_dbh;
 {
-    # DBI can no teasily be unloaded so we do that test in another test file
+    # DBI can not easily be unloaded so we do that test in another test file
     $m_dbh = $app->db->dbh( { 'database' => $sqlite_m, 'dbd_driver' => 'SQLite' } );    # Perl::DependList-IS_DEP(DBD::SQLite)
     isa_ok( $m_dbh, 'DBI::db', 'dbh() meth returns dbh' );
     is( $m_dbh, $app->db->dbh(), 'dbh() returns same object' );
@@ -81,12 +81,11 @@ is( $app->db->_dbh, undef, 'disconn() undefines main handle' );
     };
     $app->db->dbh( { dbd_driver => "foo", database => "mydb", } );
 
-    throws_ok { $app->db->dbh() } qr/no dbi_conf in arguments or app configuration/, 'dbh() no args caught OK';
+    throws_ok { $app->db->dbh() } qr/no db conf in arguments or app configuration/, 'dbh() no args caught OK';
 
-    # # these are actually uninit  warnings but strictures are on in Moo tests (TODO: a better way?)
-    dies_ok { $app->db->dbh( {} ) } 'dbh() empty hash ref';
-    dies_ok { $app->db->dbh( { dbd_driver => "fooo" } ) } 'dbh() only dbd_driver';
-    dies_ok { $app->db->dbh( { database => "medb" } ) } 'dbh() only database';
+    throws_ok { $app->db->dbh( {} ) } qr/missing required dbd_driver and database/, 'dbh() empty hash ref fatal';
+    throws_ok { $app->db->dbh( { dbd_driver => "fooo" } ) } qr/missing required database/,   'dbh() only dbd_driver fatal';
+    throws_ok { $app->db->dbh( { database   => "medb" } ) } qr/missing required dbd_driver/, 'dbh() only database fatal';
 
     @e = ( 'DBI:foo:database=mydb;host=localhost;', 'usr', 'pss', undef );
     $n = 'user pass';
@@ -113,16 +112,65 @@ is( $app->db->_dbh, undef, 'disconn() undefines main handle' );
 ## tests via conf file ##
 #########################
 
-# TODO: sort out conf file methods  (or Config::Any etc)
-# $app->fs->bindir($dir);
-# my $sqlite_f = $app->fs->spec->catdir( $dir, 'conf_db');
-# my $conf_file = $app->fs->spec->catdir( $dir, 'config', 'db.conf');
-# $app->fs->mk_parent($conf_file);
-# $app->fs->write_json($conf_file, {dbd_driver=>'SQLite', database=>$sqlite_f});
-#
-# $app->db->disconn;
-# is($app->db->_dbh, undef, 'sanity main DBH not set');
-# isa_ok($app->db->dbh(), 'DBI::db', 'dbh() connected via conf file data');
-# is($app->db->dbh()->{Driver}{Name} eq 'SQlite', 'connecetd conf is correct driver');
+$app->fs->bindir($dir);
+my $sqlite_f = $app->fs->spec->catdir( $dir, 'conf_db' );
+my $conf_file = $app->fs->spec->catdir( $dir, '.appkit.d', 'config', 'db.yaml' );
+$app->fs->mk_parent($conf_file);
+$app->fs->yaml_write( $conf_file, { dbd_driver => 'SQLite', database => $sqlite_f } );
+
+$app->db->disconn;
+is( $app->db->_dbh, undef, 'sanity main DBH not set' );
+isa_ok( $app->db->dbh(), 'DBI::db', 'dbh() connected via conf file data' );
+is( $app->db->dbh()->{Driver}{Name}, 'SQLite', 'connected conf is correct driver' );
+
+# bad conf:
+$app->fs->yaml_write( $conf_file, [ foo => 42 ] );
+$app->db->disconn;
+is( $app->db->_dbh, undef, 'sanity main DBH not set' );
+throws_ok { $app->db->dbh() } qr/no db conf in app configuration/, 'dbh() invalid config file fatal';
+unlink $conf_file;
+
+#### dbh_is_still_good_check ##
+
+throws_ok { $app->db->dbh_is_still_good_check(42) } qr/'dbh_is_still_good_check' must be undef or a coderef/, 'dbh_is_still_good_check(non-code-non-undef) dies';
+
+my $c = 0;
+my $s = 0;
+{
+    my $check = sub { ++$c };
+
+    is( $app->db->dbh_is_still_good_check($check), $check, 'dbh_is_still_good_check set returns code ref' );
+    is( $app->db->dbh_is_still_good_check(),       $check, 'dbh_is_still_good_check get returns code ref' );
+
+    $app->db->disconn;
+    is( $app->db->_dbh, undef, 'sanity main DBH not set' );
+
+    my $sqlite_x = $app->fs->spec->catdir( $dir, 'another_db' );
+    is( $c, 0, 'undef dbh does not trigger dbh_is_still_good_check' );
+    $app->db->dbh( { 'database' => $sqlite_x, 'dbd_driver' => 'SQLite' } );
+
+    no warnings 'redefine';
+    local *App::Kit::Obj::DB::_set__dbh = sub { ++$s; };
+
+    $app->db->dbh();
+    is( $c, 1, 'defined dbh does call dbh_is_still_good_check' );
+    is( $s, 0, 'true dbh_is_still_good_check does not get into rebuild 1' );
+
+    $app->db->dbh();
+    is( $c, 2, 'defined dbh does call dbh_is_still_good_check' );
+    is( $s, 0, 'true dbh_is_still_good_check does not get into rebuild 2' );
+
+    $app->db->dbh();
+    is( $c, 3, 'subsequent dbh does call dbh_is_still_good_check' );
+    is( $s, 0, 'true dbh_is_still_good_check does not get into rebuild 3' );
+
+    $c = -1;
+    $app->db->dbh( { 'database' => $sqlite_x, 'dbd_driver' => 'SQLite' } );
+    is( $c, 0, 'another subsequent dbh does call dbh_is_still_good_check' );
+    is( $s, 1, 'false dbh_is_still_good_check does get into rebuild' );
+
+    is( $app->db->dbh_is_still_good_check(undef), undef, 'dbh_is_still_good_check set returns undef' );
+    is( $app->db->dbh_is_still_good_check(),      undef, 'dbh_is_still_good_check get returns undef' );
+}
 
 done_testing;

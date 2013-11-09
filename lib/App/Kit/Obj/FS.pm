@@ -51,7 +51,7 @@ Sub::Defer::defer_sub __PACKAGE__ . '::cwd' => sub {
 #     },
 # );
 
-# TODO chdri related stuff:
+# TODO chdir related stuff:
 # Sub::Defer::defer_sub __PACKAGE__ . '::chdir' => sub {
 #     require Cwd;
 #     return sub {
@@ -221,6 +221,48 @@ Sub::Defer::defer_sub __PACKAGE__ . '::get_iterator' => sub {
     };
 };
 
+Sub::Defer::defer_sub __PACKAGE__ . '::yaml_write' => sub {
+    require YAML::Syck;
+    require String::UnicodeUTF8;
+    return sub {
+        my ( $self, $file, $ref ) = @_;
+
+        local $YAML::Syck::ImplicitTyping = 0;
+        local $YAML::Syck::SingleQuote    = 1;    # to keep from arbitrary quoting/unquoting (to help make diff's cleaner)
+        local $YAML::Syck::SortKeys       = 1;    # to make diff's cleaner
+
+        return $self->write_file(
+            $file,
+            String::UnicodeUTF8::unescape_utf8( YAML::Syck::Dump($ref) )
+        );
+    };
+};
+
+Sub::Defer::defer_sub __PACKAGE__ . '::yaml_read' => sub {
+    require YAML::Syck;
+    return sub {
+        shift;
+        local $YAML::Syck::ImplicitTyping = 0;
+        goto &YAML::Syck::LoadFile;
+    };
+};
+
+Sub::Defer::defer_sub __PACKAGE__ . '::json_write' => sub {
+    require JSON::Syck;
+    return sub {
+        shift;
+        goto &JSON::Syck::DumpFile;    # already does ♥ instead of \xe2\x99\xa5 (i.e. so no need for String::UnicodeUTF8::unescape_utf8() like w/ the YAML above)
+    };
+};
+
+Sub::Defer::defer_sub __PACKAGE__ . '::json_read' => sub {
+    require JSON::Syck;
+    return sub {
+        shift;
+        goto &JSON::Syck::LoadFile;
+    };
+};
+
 # TODO new FCR
 
 1;
@@ -335,6 +377,30 @@ Lazy wrapper of L<File::Slurp>’s read_file().
 =head2 write_file()
 
 Lazy wrapper of L<File::Slurp>’s write_file().
+
+=head2 json_read()
+
+Lazy wrapper to consistently load a JSON file to a data structure.
+
+    my $data = $fs->read_json($file);
+
+=head2 json_write()
+
+Lazy wrapper to consistently write a data structure as a JSON file.
+
+    $fs->write_json($file, $data);
+
+=head2 yaml_read()
+
+Lazy wrapper to consistently load a YAML file to a data structure.
+
+    my $data = $fs->read_yaml($file);
+
+=head2 yaml_write()
+
+Lazy wrapper to consistently write a data structure as a YAML file.
+
+    $fs->write_yaml($file, $data);
 
 =head2 get_iterator()
 

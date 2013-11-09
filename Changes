@@ -10,6 +10,10 @@ Revision history for App-Kit
         - avoids needless warning: Premature end of base64 data at t/04.ns.t line 46.
     - set File::Temp, File::Slurp, and Class::Unload dep version to latest to try to address unreproducible test failures
         - http://www.cpantesters.org/cpan/report/c81bdc48-47ed-11e3-bf3e-b51f7bc94557
+    - read/write JSON and YAML
+        - finish db conf file support
+        - config file POD
+    - support custom dbh check to use instead of ping
 
 0.3  2013-11-05 22:13:31
     - add DBD::SQLite to deps (including Perl::DependList comment notation for it to be found)

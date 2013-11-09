@@ -43,6 +43,8 @@ WriteMakefile(
         'Log::Dispatch'                 => 0,
         'Log::Dispatch::Config'         => 0,
         'Devel::Kit'                    => 0,
+        'YAML::Syck'                    => 0,
+        'JSON::Syck'                    => 0,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES    => 'App-Kit-*' },
