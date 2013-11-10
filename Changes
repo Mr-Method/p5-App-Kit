@@ -1,5 +1,9 @@
 Revision history for App-Kit
 
+???
+    - Add ex() role
+TODO: Move RW and RunCom to Util/
+
 0.5  2013-11-09 12:18:17
     - read/write JSON and YAML
         - finish db conf file support

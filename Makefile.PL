@@ -45,6 +45,11 @@ WriteMakefile(
         'Devel::Kit'                    => 0,
         'YAML::Syck'                    => 0,
         'JSON::Syck'                    => 0,
+
+        #  ex() 'Running::Commentary' too ? seems to occasianlly have trouble installing die to a dep failing
+        'Unix::Whereis'     => 0,
+        'IPC::Open3::Utils' => 0,
+        'Acme::Spork'       => 0,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES    => 'App-Kit-*' },

@@ -29,7 +29,8 @@ with 'Role::Multiton', # Would like to do ::New but that falls apart once you de
     'App::Kit::Role::Str',
     'App::Kit::Role::CType',
     'App::Kit::Role::Detect',
-    'App::Kit::Role::DB';
+    'App::Kit::Role::DB',
+    'App::Kit::Role::Ex';
 # tidyon
 
 1;
@@ -235,6 +236,10 @@ Lazy façade to a file system utility object via L<App::Kit::Role::FS>.
 
 Lazy façade to a database utility object via L<App::Kit::Role::DB>.
 
+=head3 $app->ex
+
+Lazy façade to a system execution utility object via L<App::Kit::Role::Ex>.
+
 =head1 DIAGNOSTICS
 
 Throws no warnings or errors of its own.
@@ -274,10 +279,6 @@ L<http://rt.cpan.org>.
 =item 1. More Lazy façade methods
 
 =over 4 
-
-=item * App::Kit::Role::Runner 
-
-    # $app->runner->commentary([], []), $app->runner->whereis('…'), $app->runner->run_cmd(…), put_cmd_in, $app->runner->spork(sub {}) $app->runner->as_user(sub {…}) $app->runner->usleep(…) (select(undef, undef undef, abs($n)))
 
 =item * App::Kit::Role::Crypt 
 

@@ -3,14 +3,17 @@ Changes
 lib/App/Kit/Obj/CType.pm
 lib/App/Kit/Obj/DB.pm
 lib/App/Kit/Obj/Detect.pm
+lib/App/Kit/Obj/Ex.pm
 lib/App/Kit/Obj/FS.pm
 lib/App/Kit/Obj/NS.pm
 lib/App/Kit/Obj/Str.pm
 lib/App/Kit/Pangea.pm
+lib/App/Kit/RunCom.pm
 lib/App/Kit/RW.pm
 lib/App/Kit/Role/CType.pm
 lib/App/Kit/Role/DB.pm
 lib/App/Kit/Role/Detect.pm
+lib/App/Kit/Role/Ex.pm
 lib/App/Kit/Role/FS.pm
 lib/App/Kit/Role/HTTP.pm
 lib/App/Kit/Role/Locale.pm
@@ -39,6 +42,8 @@ t/07.fs.t
 t/08.log.t
 t/09.db-2.t
 t/09.db.t
+t/10.ex-2.t
+t/10.ex.t
 t/lib/MyTest.pm
 t/perlcritic.t
 t/perltidy.t
