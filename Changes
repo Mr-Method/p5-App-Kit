@@ -1,6 +1,6 @@
 Revision history for App-Kit
 
-???
+0.6  2013-11-10 10 18:53:06
     - Add ex() role
     - Move RW and RunCom to Util/
 
