@@ -138,12 +138,12 @@ You can change make them readwrite via either of 2 mechanisms before the class i
 
 Either:
 
-    use App::Kit::RW; # must be loaded before App::Kit is use()d
+    use App::Kit::Util::RW; # must be loaded before App::Kit is use()d
     use App::Kit;
 
 or
 
-    BEGIN { $ENV{'App-Kit-RW'} = 1; };  # must be set before App::Kit is use()d
+    BEGIN { $ENV{'App-Kit-Util-RW'} = 1; };  # must be set before App::Kit is use()d
     use App::Kit;
 
 then:
@@ -154,7 +154,7 @@ then:
 
 The former might be desirable if you want to keep ENV clean, the latter for when you want to do/skip certain tests based on if it is true or not:
 
-    App-Kit-RW=1 prove -w t
+    App-Kit-Util-RW=1 prove -w t
 
 =head1 INTERFACE
 

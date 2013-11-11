@@ -12,7 +12,7 @@ has _app => (
 
 if ( !defined &runcom ) {
     *runcom = sub {
-        die "Due to compile time Shenanigans in an underlying module, you must 'use App::Kit::RunCom;' to enable runcom().\n";
+        die "Due to compile time Shenanigans in an underlying module, you must 'use App::Kit::Util::RunCom;' to enable runcom().\n";
     };
 }
 
@@ -107,9 +107,9 @@ Lazy wrapper of L<Acme::Spork>’s spork().
 
 Takes one or more strings (to be output as a sort of header) or array refs (arguments to L<Running::Commentary>’s run().
 
-If you do not call 'use App::Kit::RunCom;' at begin time this method will raise an exception reminding you to do so.
+If you do not call 'use App::Kit::Util::RunCom;' at begin time this method will raise an exception reminding you to do so.
 
-See L<App::Kit::RunCom> for more info on why that has to be that way.
+See L<App::Kit::Util::RunCom> for more info on why that has to be that way.
 
 =head2 fsleep()
 
@@ -123,7 +123,7 @@ Return true (i.e. not the value of select()) after it is done.
 
 =over 4
 
-=item C<< Due to compile time Shenanigans in an underlying module, you must 'use App::Kit::RunCom;' to enable runcom(). >>
+=item C<< Due to compile time Shenanigans in an underlying module, you must 'use App::Kit::Util::RunCom;' to enable runcom(). >>
 
 You called runcom() without setting it up first at compile time per its documentation.
 
@@ -135,7 +135,7 @@ Requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<Unix::Whereis>, L<IPC::Open3::Utils>, L<Acme::Spork>, L<Running::Commentary> (via App::Kit::RunCom)
+L<Unix::Whereis>, L<IPC::Open3::Utils>, L<Acme::Spork>, L<Running::Commentary> (via App::Kit::Util::RunCom)
 
 =head1 INCOMPATIBILITIES
 

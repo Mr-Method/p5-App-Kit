@@ -4,7 +4,7 @@ use Capture::Tiny;
 use App::Kit;
 
 BEGIN {
-    eval 'use App::Kit::RunCom';
+    eval 'use App::Kit::Util::RunCom';
     plan skip_all => 'Running::Commentary required for testing runcom()' if $@;
 }
 
@@ -27,7 +27,7 @@ my $app = App::Kit->new();
         }
     );
 
-    is( $out, "-- Starting test --\n", 'runcom() works when use App::Kit::RunCom; has been done - prints expected headings' );
+    is( $out, "-- Starting test --\n", 'runcom() works when use App::Kit::Util::RunCom; has been done - prints expected headings' );
 
     is_deeply(
         \@runcom,
@@ -35,7 +35,7 @@ my $app = App::Kit->new();
             [ 'step 1' => 'echo foo' ],
             [ 'step 2' => 'echo bar' ],
         ],
-        'runcom() works when use App::Kit::RunCom; has been done - passes expected data to run()'
+        'runcom() works when use App::Kit::Util::RunCom; has been done - passes expected data to run()'
     );
 }
 

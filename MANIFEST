@@ -8,8 +8,8 @@ lib/App/Kit/Obj/FS.pm
 lib/App/Kit/Obj/NS.pm
 lib/App/Kit/Obj/Str.pm
 lib/App/Kit/Pangea.pm
-lib/App/Kit/RunCom.pm
-lib/App/Kit/RW.pm
+lib/App/Kit/Util/RunCom.pm
+lib/App/Kit/Util/RW.pm
 lib/App/Kit/Role/CType.pm
 lib/App/Kit/Role/DB.pm
 lib/App/Kit/Role/Detect.pm

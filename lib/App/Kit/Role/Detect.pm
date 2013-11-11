@@ -6,7 +6,7 @@ use Moo::Role;
 our $VERSION = '0.1';
 
 has detect => (
-    is => ( $INC{'App/Kit/RW.pm'} || $ENV{'App-Kit-RW'} ? 'rw' : 'rwp' ),
+    is => ( $INC{'App/Kit/Util/RW.pm'} || $ENV{'App-Kit-Util-RW'} ? 'rw' : 'rwp' ),
     lazy    => 1,
     default => sub {
         require App::Kit::Obj::Detect;

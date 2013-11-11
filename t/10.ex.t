@@ -16,7 +16,7 @@ throws_ok {
         [ 'step 2' => 'echo bar' ],
     );
 }
-qr/Due to compile time Shenanigans in an underlying module, you must 'use App::Kit::RunCom;' to enable runcom\(\)\./, 'runcom() dies when not initiated';
+qr/Due to compile time Shenanigans in an underlying module, you must 'use App::Kit::Util::RunCom;' to enable runcom\(\)\./, 'runcom() dies when not initiated';
 
 ok( !exists $INC{'Unix/Whereis.pm'}, 'Sanity: Unix::Whereis not loaded before whereis()' );
 is $app->ex->whereis('perl'), Unix::Whereis::whereis('perl'), 'whereis() matches underlying whereis';

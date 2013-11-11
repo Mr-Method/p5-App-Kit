@@ -1,7 +1,7 @@
 use Test::More;
 use Test::Exception;
 
-use App::Kit::RW;    # must be loaded before App::Kit is use()d
+use App::Kit::Util::RW;    # must be loaded before App::Kit is use()d
 use App::Kit;
 
 my $app = App::Kit->new;

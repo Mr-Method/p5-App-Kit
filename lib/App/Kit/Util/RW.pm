@@ -1,4 +1,4 @@
-package App::Kit::RW;
+package App::Kit::Util::RW;
 
 ## no critic
 

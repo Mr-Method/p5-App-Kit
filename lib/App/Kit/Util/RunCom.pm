@@ -1,4 +1,4 @@
-package App::Kit::RunCom;
+package App::Kit::Util::RunCom;
 
 use strict;
 use warnings;

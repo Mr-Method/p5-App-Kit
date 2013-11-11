@@ -1,7 +1,7 @@
 use Test::More;
 use Test::Exception;
 
-BEGIN { $ENV{'App-Kit-RW'} = 1; };    # must be set before App::Kit is use()d
+BEGIN { $ENV{'App-Kit-Util-RW'} = 1; };    # must be set before App::Kit is use()d
 use App::Kit;
 
 my $app = App::Kit->new;
