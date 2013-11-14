@@ -280,7 +280,7 @@ my $my_data = {
         },
         'array' => [qw(a b c 42)],
     },
-    'utf8' => 'I ♥ Perl',
+    'utf8' => "I \xe2\x99\xa5 Perl",    # (utf8 bytes)
     'int'  => int(42.42),
     'abs'  => abs(42.42),
 };
@@ -301,7 +301,7 @@ my $yaml_cont = q{---
 "str": 'I am a string.'
 "true": 1
 "undef": ~
-"utf8": "I ♥ Perl"
+"utf8": 'I ♥ Perl'
 };
 
 #### YAML ##
@@ -317,6 +317,11 @@ is( $app->fs->read_file($yaml_file), $yaml_cont, 'yaml_write had expected conten
 
 $data = $app->fs->yaml_read($yaml_file);
 is_deeply( $data, $my_data, 'yaml_read loads expected data again' );
+
+$app->fs->yaml_write( $yaml_file, { 'unistr' => "I \x{2665} Unicode" } );
+is( $app->fs->read_file($yaml_file), qq{--- \n"unistr": 'I ♥ Unicode'\n}, 'yaml_write does unicode string as bytes (i.e. a utf8 string)' );
+$data = $app->fs->yaml_read($yaml_file);
+is_deeply( $data, { 'unistr' => "I \xe2\x99\xa5 Unicode" }, 'yaml_read reads previsouly unicode string written as bytes string as bytes' );
 
 dies_ok { $app->fs->yaml_write($hack_dir) } 'yaml_write dies on failure';
 dies_ok { $app->fs->yaml_read( $$ . 'asfvadfvdfva' . time ) } 'yaml_read dies on failure';
@@ -334,6 +339,11 @@ like( $app->fs->read_file($json_file), qr/"utf8": "I ♥ Perl"/, 'json_write had
 
 $data = $app->fs->json_read($json_file);
 is_deeply( $data, $my_data, 'json_read loads expected data again' );
+
+$app->fs->json_write( $json_file, { 'unistr' => "I \x{2665} Unicode" } );
+is( $app->fs->read_file($json_file), '{"unistr": "I ♥ Unicode"}' . "\n", 'json_write does unicode string as bytes (i.e. a utf8 string)' );
+$data = $app->fs->json_read($json_file);
+is_deeply( $data, { 'unistr' => "I \xe2\x99\xa5 Unicode" }, 'json_read reads previsouly unicode string written as bytes string as bytes' );
 
 dies_ok { $app->fs->json_write($hack_dir) } 'json_write dies on failure';
 dies_ok { $app->fs->json_read( $$ . 'asfvadfvdfva' . time ) } 'json_read dies on failure';

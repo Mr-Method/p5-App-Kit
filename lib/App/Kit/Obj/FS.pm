@@ -223,7 +223,6 @@ Sub::Defer::defer_sub __PACKAGE__ . '::get_iterator' => sub {
 
 Sub::Defer::defer_sub __PACKAGE__ . '::yaml_write' => sub {
     require YAML::Syck;
-    require String::UnicodeUTF8;
     return sub {
         my ( $self, $file, $ref ) = @_;
 
@@ -231,19 +230,22 @@ Sub::Defer::defer_sub __PACKAGE__ . '::yaml_write' => sub {
         local $YAML::Syck::SingleQuote    = 1;    # to keep from arbitrary quoting/unquoting (to help make diff's cleaner)
         local $YAML::Syck::SortKeys       = 1;    # to make diff's cleaner
 
-        return $self->write_file(
-            $file,
-            String::UnicodeUTF8::unescape_utf8( YAML::Syck::Dump($ref) )
-        );
+        return YAML::Syck::DumpFile( $file, $ref );    # this does not keep the same $YAML::Syck:: vars apparently: shift;goto &YAML::Syck::DumpFile;
+
+        # as of at least v1.27 it writes the characters without \x escaping so no need for:
+        # return $self->write_file(
+        #     $file,
+        #     String::UnicodeUTF8::unescape_utf8( YAML::Syck::Dump($ref) )
+        # );
     };
 };
 
 Sub::Defer::defer_sub __PACKAGE__ . '::yaml_read' => sub {
     require YAML::Syck;
     return sub {
-        shift;
+        my ( $self, $file ) = @_;
         local $YAML::Syck::ImplicitTyping = 0;
-        goto &YAML::Syck::LoadFile;
+        return YAML::Syck::LoadFile($file);    # this does not keep the same $YAML::Syck:: vars apparently: shift;goto &YAML::Syck::LoadFile;
     };
 };
 
@@ -251,7 +253,7 @@ Sub::Defer::defer_sub __PACKAGE__ . '::json_write' => sub {
     require JSON::Syck;
     return sub {
         shift;
-        goto &JSON::Syck::DumpFile;    # already does ♥ instead of \xe2\x99\xa5 (i.e. so no need for String::UnicodeUTF8::unescape_utf8() like w/ the YAML above)
+        goto &JSON::Syck::DumpFile;            # already does ♥ instead of \xe2\x99\xa5 (i.e. so no need for String::UnicodeUTF8::unescape_utf8() like w/ the YAML above)
     };
 };
 

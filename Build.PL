@@ -42,8 +42,8 @@ my $builder = Module::Build->new(
         'Log::Dispatch'                 => 0,
         'Log::Dispatch::Config'         => 0,
         'Devel::Kit'                    => 0,
-        'YAML::Syck'                    => 0,
-        'JSON::Syck'                    => 0,
+        'YAML::Syck'                    => 1.27,
+        'JSON::Syck'                    => 1.27,
 
         #  ex() 'Running::Commentary' too ? seems to occasianlly have trouble installing die to a dep failing
         'Unix::Whereis'     => 0,

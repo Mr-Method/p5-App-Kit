@@ -1,5 +1,10 @@
 Revision history for App-Kit
 
+???
+    - minimum version of YAML::Syck for consistent non-escaping of utf8
+        - remove current escaped utf8 handling since its built into YAML::Syck now
+    - add YAML and JSON tests for handling of unicode strings
+
 0.6  2013-11-10 10 18:53:06
     - Add ex() role
     - Move RW and RunCom to Util/
