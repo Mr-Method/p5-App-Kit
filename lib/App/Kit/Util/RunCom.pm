@@ -48,4 +48,4 @@ So in order to make runcom() work how we want this module brings in L<Running::C
 
 That means that this module must be use()d at compile time.
 
-Sort of a hassle (patches welcome!) I suppose but runcom() probably won't be needed in most of your code, just runcom() types scripts really.
+Sort of a hassle (patches welcome!) I suppose but runcom() probably won't be needed in most of your code, just runcom()-type scripts really.
