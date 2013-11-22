@@ -120,7 +120,7 @@ __END__
 
 =head1 NAME
 
-App::Kit::Obj::Db - database utility object
+App::Kit::Obj::DB - database utility object
 
 =head1 VERSION
 
