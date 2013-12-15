@@ -5,6 +5,7 @@ Revision history for App-Kit
         - remove current escaped utf8 handling since its built into YAML::Syck now
     - add YAML and JSON tests for handling of unicode strings
     - correct NS in NAME section of A::K::O::DB
+    - update required ver of String::UnicodeUTF8 to latest Unicode zero padding \x{} version
 
 0.6  2013-11-10 10 18:53:06
     - Add ex() role

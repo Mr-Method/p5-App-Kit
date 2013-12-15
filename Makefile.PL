@@ -27,7 +27,7 @@ WriteMakefile(
         'File::Spec'                    => 0,
         'FindBin'                       => 0,
         'File::ShareDir'                => 0,
-        'String::UnicodeUTF8'           => 0,
+        'String::UnicodeUTF8'           => 0.21,
         'Try::Tiny'                     => 0,
         'Import::Into'                  => 0,
         'MIME::Types'                   => 0,
