@@ -6,6 +6,7 @@ Revision history for App-Kit
     - add YAML and JSON tests for handling of unicode strings
     - correct NS in NAME section of A::K::O::DB
     - update required ver of String::UnicodeUTF8 to latest Unicode zero padding \x{} version
+    - update required version of Devel::Kit to latest (so that other reqs match)
 
 0.6  2013-11-10 10 18:53:06
     - Add ex() role
