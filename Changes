@@ -1,6 +1,6 @@
 Revision history for App-Kit
 
-???
+0.61  2013-12-15 10 11:38:09
     - minimum version of YAML::Syck for consistent non-escaping of utf8
         - remove current escaped utf8 handling since its built into YAML::Syck now
     - add YAML and JSON tests for handling of unicode strings
