@@ -50,18 +50,14 @@ sub disconn {
     my ( $self, $dbh ) = @_;
 
     if ($dbh) {
-        return 2 if !$dbh->ping;
         $dbh->disconnect || return;
     }
     else {
         if ( defined $self->_dbh ) {
-            if ( !$self->_dbh->ping ) {
-                $self->_set__dbh(undef);
-                return 2;
-            }
-            $self->_dbh->disconnect || return;
+            my $dbh = $self->_dbh;
+            $self->_set__dbh(undef);
+            $dbh->disconnect || return;
         }
-        $self->_set__dbh(undef);
     }
 
     return 1;
@@ -72,8 +68,15 @@ Sub::Defer::defer_sub __PACKAGE__ . '::dbh' => sub {
     return sub {
         my ( $self, $dbi_conf ) = @_;
 
+        if ( defined $dbi_conf && ref($dbi_conf) eq 'HASH' && $dbi_conf->{'_force_new'} ) {
+            $self->disconn;
+            if ( keys %{$dbi_conf} == 1 ) {
+                $dbi_conf = undef;
+            }
+        }
+
         if ( !$self->_dbh || ( defined $self->dbh_is_still_good_check ? !$self->dbh_is_still_good_check->( $self->_dbh ) : !$self->_dbh->ping ) ) {
-            if ( !$dbi_conf ) {
+            if ( !$dbi_conf || $dbi_conf->{'_use_config'} ) {
                 my $file = $self->_app->fs->file_lookup( 'config', 'db.yaml' );
                 if ($file) {
                     $dbi_conf = $self->_app->fs->yaml_read($file);    # Config::Any seems like over kill, no?
@@ -189,6 +192,12 @@ hashref of additional DSN keys and values (built sorted by key)
 
 hashref that corresponds to the 4th argument to DBI->connect;
 
+=item _force_new
+
+When true, it will cause the current handle, if any, to be disconnected and removed and replaced by a fresh connection.
+
+If it is the only key in the hash the config file is used.
+
 =back
 
 The connections hashref can be given in two ways:
@@ -220,8 +229,6 @@ Lazy loads L<DBI> the first time it is called.
 When given no arguments it disconnects and undefines the main database handle (i.e. the one via dbh()).
 
 When given a database handle (e.g. one from conn()) it disconnects that.
-
-Returns 2 if it is already disconnected.
 
 =head1 DIAGNOSTICS
 

@@ -32,7 +32,7 @@ ok( $x_dbh->ping,              'sanity: x_dbh is connected' );
 ok( $app->db->disconn($x_dbh), 'disconn($dbh) returns true when it works' );
 ok( !$x_dbh->ping,             'disconn($dbh) disconnects given handle' );
 ok( $m_dbh->ping,              'disconn($dbh) does not disconnect main handle' );
-is( $app->db->disconn($x_dbh), 2, 'disconn($dbh) returns 2 when it is already disconnected' );
+is( $app->db->disconn($x_dbh), 1, 'disconn($dbh) returns 1 when it is already disconnected' );
 
 ok( $app->db->disconn(), 'disconn() returns true when it works' );
 ok( !$m_dbh->ping,       'disconn() disconnects main handle' );
@@ -122,6 +122,13 @@ $app->db->disconn;
 is( $app->db->_dbh, undef, 'sanity main DBH not set' );
 isa_ok( $app->db->dbh(), 'DBI::db', 'dbh() connected via conf file data' );
 is( $app->db->dbh()->{Driver}{Name}, 'SQLite', 'connected conf is correct driver' );
+
+my $prev = $app->db->dbh;
+my $f_dbh = $app->db->dbh( { _force_new => 1 } );
+isa_ok( $f_dbh, 'DBI::db', '_force_new returns DBD obj' );
+is( $f_dbh->{Driver}{Name}, 'SQLite', '_force_new respects config via file' );
+isnt( $f_dbh, $prev, '_force_new gave a new object' );
+ok( !$prev->ping, '_force_new disconnected the previous obj' );
 
 # bad conf:
 $app->fs->yaml_write( $conf_file, [ foo => 42 ] );
