@@ -1,5 +1,8 @@
 Revision history for App-Kit
 
+0.62 ???
+    - rt 91462: remove dep that caused circular dep
+
 0.61  2013-12-15 10 11:38:09
     - minimum version of YAML::Syck for consistent non-escaping of utf8
         - remove current escaped utf8 handling since its built into YAML::Syck now
