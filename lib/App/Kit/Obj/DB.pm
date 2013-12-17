@@ -3,7 +3,7 @@ package App::Kit::Obj::DB;
 ## no critic (RequireUseStrict) - Moo does strict
 use Moo;
 
-our $VERSION = '0.1';
+our $VERSION = '0.2';
 
 Sub::Defer::defer_sub __PACKAGE__ . '::conn' => sub {
     require DBI;
@@ -127,7 +127,7 @@ App::Kit::Obj::DB - database utility object
 
 =head1 VERSION
 
-This document describes App::Kit::Obj::DB version 0.1
+This document describes App::Kit::Obj::DB version 0.2
 
 =head1 SYNOPSIS
 

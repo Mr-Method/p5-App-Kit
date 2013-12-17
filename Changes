@@ -1,6 +1,6 @@
 Revision history for App-Kit
 
-0.62 ???
+0.62  2013-12-17 05:15:32
     - rt 91462: remove dep that caused circular dep
     - add _force_new option to db->dbh
 
