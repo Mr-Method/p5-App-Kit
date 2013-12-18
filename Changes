@@ -1,5 +1,8 @@
 Revision history for App-Kit
 
+???
+    - adjust warning test regex to match better (e.g. d5b5d78a-6752-11e3-ace4-6da5dfbfc7aa)
+
 0.62  2013-12-17 05:15:32
     - rt 91462: remove dep that caused circular dep
     - add _force_new option to db->dbh
