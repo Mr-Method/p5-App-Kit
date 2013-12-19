@@ -137,7 +137,7 @@ ok( !exists $INC{'File/Slurp.pm'}, 'Sanity: File::Slurp not loaded before read_f
 is_deeply [ $app->fs->read_file($fsfile) ], [ "foo\n", "bar\n" ], 'read_file() in array context';
 ok( exists $INC{'File/Slurp.pm'}, 'File::Slurp lazy loaded on initial read_file()' );
 is $app->fs->read_file($fsfile), "foo\nbar\n", 'read_file() in scalar context';
-dies_ok { $app->fs->read_file($fsdir) } 'read_file() failure is fatal';
+dies_ok { $app->fs->read_file('') } 'read_file() failure is fatal';    # $fsdir die for me usually but not for all (e.g. 75564f20-675a-11e3-bd14-e3bee4621ba3 same version of F::S, diff perls, etc) so lets try empoty string
 
 # more $app->fs->read_dir
 is_deeply [ $app->fs->read_dir($fsdir) ], ['foo'], 'read_dir() on dir w/ files';
