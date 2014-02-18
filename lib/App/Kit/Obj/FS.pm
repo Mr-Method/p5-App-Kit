@@ -172,6 +172,14 @@ has bindir => (
 
     # 'isa'     => sub { die "'bindir' must be a directory" unless -d $_[1] },
     'default' => sub {
+
+        # PSGI/Plack $0
+        #   1. starman worker -Ilib … t/test.psgi
+        #   2. 500 error: Cannot find current script 'starman worker -Ilib … t/test.psgi' at …/FindBin.pm line 166.
+        local $0 = $0;
+        if ( $0 =~ m/(\S+\.psgi)/ ) {
+            $0 = $1;
+        }
         require FindBin;
         require Cwd;
         return $FindBin::Bin || FindBin->again() || Cwd::cwd();
@@ -311,6 +319,8 @@ Lazy loads L<File::Spec> and returns the class accessor for L<File::Spec> method
 The applications main directory. Defaults to script’s directory or the current working directory.
 
 Lazy loads L<FindBin> and L<Cwd>.
+
+Works with .psgi files being run under Plack/PSGI.
 
 =head3 inc
 
