@@ -38,6 +38,14 @@ has prefix => (
     default => sub { return 'appkit' },
 );
 
+Sub::Defer::defer_sub __PACKAGE__ . '::rand' => sub {
+    require Data::Rand;
+    return sub {
+        shift;
+        goto &Data::Rand::rand_data_string;
+    };
+};
+
 # TODO: trim && ws_norm($str)
 
 1;
@@ -95,6 +103,16 @@ Returns a portable CRLF. (i.e. \r\n is not portable)
 
 Returns a zero-but-true string.
 
+=head2 rand()
+
+Returns a random string.
+
+1st arg is the number of items (default 32).
+
+2nd arg is the array ref of items (default 0 .. 9 and upper and lower case a-z)
+
+Lazy wrapper of wrapper L<Data::Rand>’s rand_data_string().
+
 =head1 DIAGNOSTICS
 
 Setting the prefix to an invalid value can result in an error that is descriptive of the problem.
@@ -106,6 +124,8 @@ Requires no configuration files or environment variables.
 =head1 DEPENDENCIES
 
 L<String::UnicodeUTF8>
+
+L<Data::Rand>
 
 =head1 INCOMPATIBILITIES
 

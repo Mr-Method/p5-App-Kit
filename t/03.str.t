@@ -26,4 +26,14 @@ throws_ok { $app->str->prefix('../etc') } qr{prefix can only contain A\-Z and 0\
 is( $app->str->prefix('new'), 'new', 'prefix setting returns prefix' );
 is( $app->str->prefix,        'new', 'prefix setting retained' );
 
+ok( !exists $INC{'Data/Rand.pm'}, 'lazy under pinning not loaded before' );
+my $rand = $app->str->rand();
+ok( exists $INC{'Data/Rand.pm'}, 'lazy under pinning loaded after' );
+is( length($rand), 32, "rand() default length correct" );
+like( $rand, qr/\A[0-9a-zA-Z]+\Z/, "rand() default items correct" );
+
+my $randx = $app->str->rand( 2, [ "\xe2\x99\xa5", "\xe2\x98\xba" ] );
+is( $app->str->char_count($randx), 2, "rand() given length correct" );
+like( $randx, qr/\A(:?\xe2\x99\xa5|\xe2\x98\xba)+\Z/, "rand() given items correct" );
+
 done_testing;
