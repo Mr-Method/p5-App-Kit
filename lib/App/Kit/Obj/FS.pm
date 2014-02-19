@@ -72,6 +72,11 @@ Sub::Defer::defer_sub __PACKAGE__ . '::cwd' => sub {
 #     return 1;
 # }
 
+sub appdir {
+    my ($self) = @_;
+    return $self->spec->catdir( $self->bindir(), '.' . $self->_app->str->prefix . '.d' );
+}
+
 sub file_lookup {
     my ( $self, @rel_parts ) = @_;
 
@@ -79,8 +84,7 @@ sub file_lookup {
     $call->{'inc'} = [] if !exists $call->{'inc'} || ref $call->{'inc'} ne 'ARRAY';
 
     my @paths;
-    my $name = $self->_app->str->prefix;
-    for my $base ( @{ $call->{'inc'} }, $self->spec->catdir( $self->bindir(), ".$name.d" ), @{ $self->inc } ) {
+    for my $base ( @{ $call->{'inc'} }, $self->appdir, @{ $self->inc } ) {
         next if !$base;
         push @paths, $self->spec->catfile( $base, @rel_parts );
     }
@@ -330,6 +334,14 @@ An array ref of paths for file_lookup() to use. Defaults to [].
 
 Lazy wrapper of L<Cwd>’s cwd().
 
+=head2 appdir()
+
+The directory that belongs to the app.
+
+It is a directory in the object’s base path called .$prefix.d (where $prefix is the _app attributes’s ->str->prefix):
+
+$fs->bindir()/.$str->prefix().d/
+
 =head2 file_lookup()
 
 In scalar context returns the first path that exists for the given arguments.
@@ -340,7 +352,7 @@ The final argument can be a config hashref with the inc key whose value is an ar
 
 The arguments are the pieces of the path you are interested in that get put together in a portable way.
 
-    my $conf = $fs->file_lookup('data', 'foo.json'); # e.g. …/my_app_base/.appkit.d/data/foo.json
+    my $conf = $fs->file_lookup('data', 'foo.json'); # e.g. …/my_app_bindir/.appkit.d/data/foo.json
 
 The path is looked for in this order:
 
@@ -348,7 +360,7 @@ The path is looked for in this order:
 
 1. the 'inc' paths in the given argument if any
 
-2. a directory in the object’s base path called .$prefix.d (where $prefix is the _app attributes’s ->str->prefix).
+2. appdir()
 
 3. the objects’s inc attribute
 

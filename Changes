@@ -6,6 +6,7 @@ Revision history for App-Kit
     - attempt more universal failure in test (e.g. 75564f20-675a-11e3-bd14-e3bee4621ba3)
     - make fs->bindir() work w/ PSGI/Plack $0
     - add str->rand
+    - add fs->appdir
 
 0.62  2013-12-17 05:15:32
     - rt 91462: remove dep that caused circular dep

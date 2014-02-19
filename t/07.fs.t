@@ -348,4 +348,12 @@ is_deeply( $data, { 'unistr' => "I \xe2\x99\xa5 Unicode" }, 'json_read reads pre
 dies_ok { $app->fs->json_write($hack_dir) } 'json_write dies on failure';
 dies_ok { $app->fs->json_read( $$ . 'asfvadfvdfva' . time ) } 'json_read dies on failure';
 
+#### appdir() ##
+
+is($app->fs->appdir, $app->fs->spec->catdir( $app->fs->bindir(), '.' . $app->str->prefix() . '.d'), 'appdir() returns expected string');
+my $curprfx = $app->str->prefix;
+$app->str->prefix("yabba");
+is($app->fs->appdir, $app->fs->spec->catdir( $app->fs->bindir(), '.yabba.d'), 'appdir() returns expected string each time (e.g. when prefix changes)');
+$app->str->prefix($curprfx);
+
 done_testing;
