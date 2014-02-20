@@ -350,10 +350,10 @@ dies_ok { $app->fs->json_read( $$ . 'asfvadfvdfva' . time ) } 'json_read dies on
 
 #### appdir() ##
 
-is($app->fs->appdir, $app->fs->spec->catdir( $app->fs->bindir(), '.' . $app->str->prefix() . '.d'), 'appdir() returns expected string');
+is( $app->fs->appdir, $app->fs->spec->catdir( $app->fs->bindir(), '.' . $app->str->prefix() . '.d' ), 'appdir() returns expected string' );
 my $curprfx = $app->str->prefix;
 $app->str->prefix("yabba");
-is($app->fs->appdir, $app->fs->spec->catdir( $app->fs->bindir(), '.yabba.d'), 'appdir() returns expected string each time (e.g. when prefix changes)');
+is( $app->fs->appdir, $app->fs->spec->catdir( $app->fs->bindir(), '.yabba.d' ), 'appdir() returns expected string each time (e.g. when prefix changes)' );
 $app->str->prefix($curprfx);
 
 done_testing;
