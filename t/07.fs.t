@@ -321,7 +321,7 @@ is_deeply( $data, $my_data, 'yaml_read loads expected data again' );
 $app->fs->yaml_write( $yaml_file, { 'unistr' => "I \x{2665} Unicode" } );
 is( $app->fs->read_file($yaml_file), qq{--- \n"unistr": 'I ♥ Unicode'\n}, 'yaml_write does unicode string as bytes (i.e. a utf8 string)' );
 $data = $app->fs->yaml_read($yaml_file);
-is_deeply( $data, { 'unistr' => "I \xe2\x99\xa5 Unicode" }, 'yaml_read reads previsouly unicode string written as bytes string as bytes' );
+is_deeply( $data, { 'unistr' => "I \xe2\x99\xa5 Unicode" }, 'yaml_read reads previously unicode string written as bytes string as bytes' );
 
 dies_ok { $app->fs->yaml_write($hack_dir) } 'yaml_write dies on failure';
 dies_ok { $app->fs->yaml_read( $$ . 'asfvadfvdfva' . time ) } 'yaml_read dies on failure';
@@ -348,7 +348,9 @@ is_deeply( $data, { 'unistr' => "I \xe2\x99\xa5 Unicode" }, 'json_read reads pre
 dies_ok { $app->fs->json_write($hack_dir) } 'json_write dies on failure';
 dies_ok { $app->fs->json_read( $$ . 'asfvadfvdfva' . time ) } 'json_read dies on failure';
 
+################
 #### appdir() ##
+################
 
 is( $app->fs->appdir, $app->fs->spec->catdir( $app->fs->bindir(), '.' . $app->str->prefix() . '.d' ), 'appdir() returns expected string' );
 my $curprfx = $app->str->prefix;
