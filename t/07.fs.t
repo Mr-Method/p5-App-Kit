@@ -329,7 +329,7 @@ dies_ok { $app->fs->yaml_read( $$ . 'asfvadfvdfva' . time ) } 'yaml_read dies on
 #### JSON ##
 
 ok( $app->fs->json_write( $json_file, $my_data ), 'json_write returns true on success' );
-like( $app->fs->read_file($json_file), qr/"utf8": "I ♥ Perl"/, 'json_write had expected content written' );    # string can change, no way to SortKeys like w/ YAML::Syck, so just make sure utf8 not written in escape syntax
+like( $app->fs->read_file($json_file), qr/"utf8": "I \xe2\x99\xa5 Perl"/, 'json_write had expected content written' );    # string can change, no way to SortKeys like w/ YAML::Syck, so just make sure utf8 not written in escape syntax
 
 $data = $app->fs->json_read($json_file);
 is_deeply( $data, $my_data, 'json_read loads expected data' );
