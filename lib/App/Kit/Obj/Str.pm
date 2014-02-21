@@ -46,6 +46,55 @@ Sub::Defer::defer_sub __PACKAGE__ . '::rand' => sub {
     };
 };
 
+Sub::Defer::defer_sub __PACKAGE__ . '::yaml_to_ref' => sub {
+    require YAML::Syck;
+    return sub {
+        my ( $self, $yaml ) = @_;
+
+        # See fs->yaml_read
+        local $YAML::Syck::ImplicitTyping = 0;
+        return YAML::Syck::Load($yaml);    # already does ♥ instead of \xe2\x99\xa5 (i.e. so no need for String::UnicodeUTF8::unescape_utf8() like w/ the YAML above)
+    };
+};
+
+Sub::Defer::defer_sub __PACKAGE__ . '::ref_to_yaml' => sub {
+    require YAML::Syck;
+    return sub {
+        my ( $self, $ref ) = @_;
+
+        # See fs->yaml_write
+
+        local $YAML::Syck::ImplicitTyping = 0;
+        local $YAML::Syck::SingleQuote    = 1;    # to keep from arbitrary quoting/unquoting (to help make diff's cleaner)
+        local $YAML::Syck::SortKeys       = 1;    # to make diff's cleaner
+
+        return YAML::Syck::Dump($ref);            # as of at least v1.27 it writes the characters without \x escaping so no need to String::UnicodeUTF8::unescape_utf8 the result
+    };
+};
+
+Sub::Defer::defer_sub __PACKAGE__ . '::json_to_ref' => sub {
+    require JSON::Syck;
+    return sub {
+        shift;
+        goto &JSON::Syck::Load;                   # already does ♥ instead of \xe2\x99\xa5 (i.e. so no need for String::UnicodeUTF8::unescape_utf8() like w/ the YAML above)
+    };
+};
+
+Sub::Defer::defer_sub __PACKAGE__ . '::ref_to_json' => sub {
+    require JSON::Syck;
+    return sub {
+        shift;
+        goto &JSON::Syck::Dump;                   # already does ♥ instead of \xe2\x99\xa5 (i.e. so no need for String::UnicodeUTF8::unescape_utf8() like w/ the YAML above)
+    };
+};
+
+sub ref_to_jsonp {
+    my ( $app, $ref, $function ) = @_;
+    $function ||= 'jsonp_callback';
+    return if $function =~ m/[^0-9a-zA-Z_]/;
+    return $function . '(' . $app->ref_to_json($ref) . ');';
+}
+
 # TODO: trim && ws_norm($str)
 
 1;
@@ -112,6 +161,28 @@ Returns a random string.
 2nd arg is the array ref of items (default 0 .. 9 and upper and lower case a-z)
 
 Lazy wrapper of wrapper L<Data::Rand>’s rand_data_string().
+
+=head2 yaml_to_ref()
+
+Lazy wrapper of L<YAML::Syck>’s Load().
+
+=head2 ref_to_yaml()
+
+Lazy wrapper of L<YAML::Syck>’s Dump().
+
+=head2 json_to_ref()
+
+Lazy wrapper of L<JSON::Syck>’s Load().
+
+=head2 ref_to_json()
+
+Lazy wrapper of L<JSON::Syck>’s Dump().
+
+=head2 ref_to_jsonp()
+
+Like ref_to_json() but pads it. The function name defaults to “jsonp_callback” but can be given as a second argument.
+
+return()’s if you give it a function name with anything besides [0-9a-zA-Z_].
 
 =head1 DIAGNOSTICS
 

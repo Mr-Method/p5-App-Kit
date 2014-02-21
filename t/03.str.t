@@ -36,4 +36,64 @@ my $randx = $app->str->rand( 2, [ "\xe2\x99\xa5", "\xe2\x98\xba" ] );
 is( $app->str->char_count($randx), 2, "rand() given length correct" );
 like( $randx, qr/\A(:?\xe2\x99\xa5|\xe2\x98\xba)+\Z/, "rand() given items correct" );
 
+#####################
+#### YAML and JSON ##
+#####################
+
+my $my_data = {
+    'str'   => 'I am a string.',
+    'true'  => 1,
+    'false' => 0,
+    'undef' => undef,
+    'empty' => "",
+    'hash'  => {
+        'nested' => {
+            zop => 'bar',
+        },
+        'array' => [qw(a b c 42)],
+    },
+    'utf8' => "I \xe2\x99\xa5 Perl",    # (utf8 bytes)
+    'int'  => int(42.42),
+    'abs'  => abs(42.42),
+};
+
+my $yaml_cont = q{--- 
+"abs": '42.42'
+"empty": ''
+"false": 0
+"hash": 
+  "array": 
+    - 'a'
+    - 'b'
+    - 'c'
+    - 42
+  "nested": 
+    "zop": 'bar'
+"int": 42
+"str": 'I am a string.'
+"true": 1
+"undef": ~
+"utf8": 'I ♥ Perl'
+};
+
+my $json_cont = q();
+
+#### YAML ##
+
+is( $app->str->ref_to_yaml($my_data), $yaml_cont, 'structure turns into expected YAML' );
+is_deeply( $app->str->yaml_to_ref($yaml_cont), $my_data, 'YAML turns into expected structure' );
+
+is( $app->str->ref_to_yaml( { 'unistr' => "I \x{2665} Unicode" } ), qq{--- \n"unistr": 'I \xe2\x99\xa5 Unicode'\n}, 'structure (w/ unicode str) turns into expected YAML' );
+
+#### JSON ##
+
+like( $app->str->ref_to_json($my_data), qr/"utf8"\s*:\s*"I \xe2\x99\xa5 Perl"/, 'structure turns into expected JSON' );
+is_deeply( $app->str->json_to_ref(qq({"foo":42})), { foo => 42 }, 'JSON turns into expected structure' );
+
+like( $app->str->ref_to_json( { 'unistr' => "I \x{2665} Unicode" } ), qr/"unistr"\s*:\s*"I \xe2\x99\xa5 Unicode"/, 'structure (w/ unicode str) turns into expected JSON' );
+
+is( $app->str->ref_to_jsonp($my_data), 'jsonp_callback(' . $app->str->ref_to_json($my_data) . ');', 'JSONP w/ no callback arg' );
+is( $app->str->ref_to_jsonp( $my_data, 'scotch' ), 'scotch(' . $app->str->ref_to_json($my_data) . ');', 'JSONP w/ callback arg' );
+is( $app->str->ref_to_jsonp( $my_data, 'mord mord' ), undef, 'JSONP w/ invalid callback arg' );
+
 done_testing;

@@ -7,6 +7,7 @@ Revision history for App-Kit
     - make fs->bindir() work w/ PSGI/Plack $0
     - add str->rand
     - add fs->appdir
+    - add JSON and YAML methods to str()
 
 0.62  2013-12-17 05:15:32
     - rt 91462: remove dep that caused circular dep
