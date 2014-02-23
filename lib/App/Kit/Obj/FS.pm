@@ -277,6 +277,40 @@ Sub::Defer::defer_sub __PACKAGE__ . '::json_read' => sub {
     };
 };
 
+sub is_safe_part {
+    my ( $fs, $part ) = @_;
+
+    return if !defined($part) || !length($part) || $part eq $fs->spec->updir;
+    return if scalar( $fs->spec->splitdir($part) ) != 1;
+    return if utf8::is_utf8($part);    # a Unicode string, see String::UnicodeUTF8
+    return if $part =~ m/[><|*&]/;     # some common shell meta characters
+
+    my $cleaned = $fs->_app->str->trim( $part, 1 );
+    return if $cleaned ne $part;
+
+    return 1;
+}
+
+sub is_safe_path {
+    my ( $fs, $path, $abs_ok, $trl_ok ) = @_;
+
+    return if !defined($path) || !length($path);
+    return if utf8::is_utf8($path);    # a Unicode string, see String::UnicodeUTF8
+
+    my @parts = $fs->spec->splitdir($path);
+
+    return if !$abs_ok && $parts[0] eq '';
+    return if !$trl_ok && $parts[-1] eq '';
+
+    for my $idx ( 0 .. $#parts ) {
+        next if $idx == 0 && $parts[$idx] eq '';
+        next if $idx == $#parts && $parts[$idx] eq '';
+        return if !$fs->is_safe_part( $parts[$idx] );
+    }
+
+    return 1;
+}
+
 # TODO new FCR
 
 1;
@@ -429,6 +463,42 @@ Lazy wrapper to consistently write a data structure as a YAML file.
 =head2 get_iterator()
 
 Lazy wrapper of L<Path::Iter>’s get_iterator().
+
+=head2 is_safe_part()
+
+Takes a bytes string (utf8 if encoding matters in your context) and returns true if it safe to use as part of a path name.
+
+e.g.:
+
+    foo            # safe
+    ..             # not safe
+    f\x00o         # not safe
+    f\x{2665}o     # not safe
+    f\xe2\x99\xa5o # safe
+
+=head2 is_safe_path()
+
+Takes a bytes string (utf8 if encoding matters in your context) and returns true if it is safe to use as a path name.
+
+e.g.:
+
+    foo/bar            # safe
+    foo/../bar         # not safe
+    f\x00o/bar         # not safe
+    f\x{2665}o/bar     # not safe
+    f\xe2\x99\xa5o/bar # safe
+
+2nd arg: boolean (default false) to allow absolute paths.
+
+e.g.:
+
+    /foo/bar # now safe
+
+3rd arg:  boolean (default false) to allow trailing path separator
+
+e.g.:
+
+    foo/bar/ # now safe
 
 =head1 DIAGNOSTICS
 

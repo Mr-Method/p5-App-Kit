@@ -96,4 +96,21 @@ is( $app->str->ref_to_jsonp($my_data), 'jsonp_callback(' . $app->str->ref_to_jso
 is( $app->str->ref_to_jsonp( $my_data, 'scotch' ), 'scotch(' . $app->str->ref_to_json($my_data) . ');', 'JSONP w/ callback arg' );
 is( $app->str->ref_to_jsonp( $my_data, 'mord mord' ), undef, 'JSONP w/ invalid callback arg' );
 
+#### trim() ##
+
+my @strings = (
+    [ "foo",                                     "foo",                    "foo",              "none" ],
+    [ "  f  oo  ",                               "f  oo",                  "f oo",             "basic" ],
+    [ "  f  \xe2\x99\xa5oo  ",                   "f  \xe2\x99\xa5oo",      "f \xe2\x99\xa5oo", "basic bytes" ],
+    [ "  f  \x{2665}oo  ",                       "f  \x{2665}oo",          "f \x{2665}oo",     "basic unicode" ],
+    [ "\xc2\xa0foo\xc2\xa0\xc2\xa0bar\xc2\xa0",  "foo\xc2\xa0\xc2\xa0bar", "foo bar",          "nbsp" ],
+    [ "f\x00oo \xc2\xa0b\xe2\x80\x8ba\x09r",     "foo \xc2\xa0bar",        "foo bar",          "funky chunks-bytes" ],
+    [ "f\x{0000}oo \x{00a0}b\x{200b}a\x{0009}r", "foo \x{00a0}bar",        "foo bar",          "funky chunks-unicode" ],
+);
+
+for my $str (@strings) {
+    is $app->str->trim( $str->[0] ), $str->[1], "trim($str->[3])";
+    is $app->str->trim( $str->[0], 1 ), $str->[2], "trim($str->[3],1)";
+}
+
 done_testing;

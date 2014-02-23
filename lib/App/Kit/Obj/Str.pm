@@ -95,7 +95,35 @@ sub ref_to_jsonp {
     return $function . '(' . $app->ref_to_json($ref) . ');';
 }
 
-# TODO: trim && ws_norm($str)
+Sub::Defer::defer_sub __PACKAGE__ . '::trim' => sub {
+    require String::UnicodeUTF8;
+
+    # regex is made from the Unicode code points from: `unichars '\p{WhiteSpace}'` (sans SPACE and NO-BREAK SPACE)
+    my $disallowed_whitespace = qr/(?:\x09|\x0a|\x0b|\x0c|\x0d|\xc2\x85|\xe1\x9a\x80|\xe1\xa0\x8e|\xe2\x80\x80|\xe2\x80\x81|\xe2\x80\x82|\xe2\x80\x83|\xe2\x80\x84|\xe2\x80\x85|\xe2\x80\x86|\xe2\x80\x87|\xe2\x80\x88|\xe2\x80\x89|\xe2\x80\x8a|\xe2\x80\xa8|\xe2\x80\xa9|\xe2\x80\xaf|\xe2\x81\x9f|\xe3\x80\x80)/;
+
+    # regex is made from the Unicode code points from: `uninames invisible`
+    my $invisible = qr/(?:\xe2\x80\x8b|\xe2\x81\xa2|\xe2\x81\xa3|\xe2\x81\xa4)/;
+
+    # regex is made from the Unicode code points from: `unichars '\p{Control}'`
+    my $control =
+      qr/(?:\x00|\x01|\x02|\x03|\x04|\x05|\x06|\x07|\x08|\x09|\x0a|\x0b|\x0c|\x0d|\x0e|\x0f|\x10|\x11|\x12|\x13|\x14|\x15|\x16|\x17|\x18|\x19|\x1a|\x1b|\x1c|\x1d|\x1e|\x1f|\x7f|\xc2\x80|\xc2\x81|\xc2\x82|\xc2\x83|\xc2\x84|\xc2\x85|\xc2\x86|\xc2\x87|\xc2\x88|\xc2\x89|\xc2\x8a|\xc2\x8b|\xc2\x8c|\xc2\x8d|\xc2\x8e|\xc2\x8f|\xc2\x90|\xc2\x91|\xc2\x92|\xc2\x93|\xc2\x94|\xc2\x95|\xc2\x96|\xc2\x97|\xc2\x98|\xc2\x99|\xc2\x9a|\xc2\x9b|\xc2\x9c|\xc2\x9d|\xc2\x9e|\xc2\x9f)/;
+
+    return sub {
+        my ( $str, $string, $collapse ) = @_;
+
+        my $is_unicode = String::UnicodeUTF8::is_unicode($string);
+
+        $string = String::UnicodeUTF8::get_utf8($string);
+
+        $string =~ s/(?:$disallowed_whitespace|$invisible|$control)+//g;
+        $string =~ s/^(?:\x20|\xc2\xa0)+//;
+        $string =~ s/(?:\x20|\xc2\xa0)+$//;
+
+        $string =~ s/(?:\x20|\xc2\xa0){2,}/ /g if $collapse;
+
+        return $is_unicode ? String::UnicodeUTF8::get_unicode($string) : $string;
+    };
+};
 
 1;
 
@@ -183,6 +211,14 @@ Lazy wrapper of L<JSON::Syck>’s Dump().
 Like ref_to_json() but pads it. The function name defaults to “jsonp_callback” but can be given as a second argument.
 
 return()’s if you give it a function name with anything besides [0-9a-zA-Z_].
+
+=head2 trim()
+
+Takes a string (unicode or utf8 bytes)
+
+and returns a version of it with all unicode whitespace (except space and non-break-space), invisible, and control characters removed and also leading and trailing space/non-break-space removed
+
+A second boolean argument (default false) will collapse multiple space/non-break-space sequences down to a single space.
 
 =head1 DIAGNOSTICS
 

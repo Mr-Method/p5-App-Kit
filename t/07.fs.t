@@ -335,7 +335,7 @@ $data = $app->fs->json_read($json_file);
 is_deeply( $data, $my_data, 'json_read loads expected data' );
 
 ok( $app->fs->json_write( $json_file, $data ), 'json_write returns true on success again' );
-like( $app->fs->read_file($json_file), qr/"utf8": "I ♥ Perl"/, 'json_write had expected content written' );    # string can change, no way to SortKeys like w/ YAML::Syck, so just make sure utf8 not written in escape syntax
+like( $app->fs->read_file($json_file), qr/"utf8": "I ♥ Perl"/, 'json_write had expected content written' );             # string can change, no way to SortKeys like w/ YAML::Syck, so just make sure utf8 not written in escape syntax
 
 $data = $app->fs->json_read($json_file);
 is_deeply( $data, $my_data, 'json_read loads expected data again' );
@@ -357,5 +357,31 @@ my $curprfx = $app->str->prefix;
 $app->str->prefix("yabba");
 is( $app->fs->appdir, $app->fs->spec->catdir( $app->fs->bindir(), '.yabba.d' ), 'appdir() returns expected string each time (e.g. when prefix changes)' );
 $app->str->prefix($curprfx);
+
+#####################################
+#### is_safe_part() is_safe_path() ##
+#####################################
+
+is_deeply( [ $app->fs->is_safe_part() ],           [], 'is_safe_part no arg' );
+is_deeply( [ $app->fs->is_safe_part(undef) ],      [], 'is_safe_part undef' );
+is_deeply( [ $app->fs->is_safe_part('') ],         [], 'is_safe_part no empty' );
+is_deeply( [ $app->fs->is_safe_part("\x{2665}") ], [], 'is_safe_part no unicode' );
+is_deeply( [ $app->fs->is_safe_part("foo/bar") ],  [], 'is_safe_part path' );
+
+is_deeply( [ $app->fs->is_safe_path() ],               [], 'is_safe_path no arg' );
+is_deeply( [ $app->fs->is_safe_path(undef) ],          [], 'is_safe_path undef' );
+is_deeply( [ $app->fs->is_safe_path('') ],             [], 'is_safe_path no empty' );
+is_deeply( [ $app->fs->is_safe_path("\x{2665}/foo") ], [], 'is_safe_path no unicode' );
+
+is_deeply( [ $app->fs->is_safe_path('/foo/bar') ],  [], 'is_safe_path abs' );
+is_deeply( [ $app->fs->is_safe_path("foo/bar/") ],  [], 'is_safe_path trailing' );
+is_deeply( [ $app->fs->is_safe_path('/foo/bar/') ], [], 'is_safe_path abs and trailing' );
+
+is( $app->fs->is_safe_path( '/foo/bar', 1 ), 1, 'is_safe_path abs ok' );
+is( $app->fs->is_safe_path( "foo/bar/",  0, 1 ), 1, 'is_safe_path trailing ok' );
+is( $app->fs->is_safe_path( "/foo/bar/", 1, 1 ), 1, 'is_safe_path abd and trailing ok' );
+
+ok( $app->fs->is_safe_part("foo"),     "is_safe_part() path part OK" );
+ok( $app->fs->is_safe_path("foo/bar"), "is_safe_path() path OK" );
 
 done_testing;
