@@ -95,6 +95,14 @@ sub ref_to_jsonp {
     return $function . '(' . $app->ref_to_json($ref) . ');';
 }
 
+Sub::Defer::defer_sub __PACKAGE__ . '::sha1' => sub {
+    require Digest::SHA;
+    return sub {
+        shift;
+        goto &Digest::SHA::sha1_hex;
+    };
+};
+
 Sub::Defer::defer_sub __PACKAGE__ . '::trim' => sub {
     require String::UnicodeUTF8;
 
@@ -219,6 +227,10 @@ Takes a string (unicode or utf8 bytes)
 and returns a version of it with all unicode whitespace (except space and non-break-space), invisible, and control characters removed and also leading and trailing space/non-break-space removed
 
 A second boolean argument (default false) will collapse multiple space/non-break-space sequences down to a single space.
+
+=head2 sha1()
+
+Lazy wrapper of L<Digest::SHA>’s sha1().
 
 =head1 DIAGNOSTICS
 

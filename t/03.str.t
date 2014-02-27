@@ -113,4 +113,9 @@ for my $str (@strings) {
     is $app->str->trim( $str->[0], 1 ), $str->[2], "trim($str->[3],1)";
 }
 
+### sha1 ###
+
+is( $app->str->sha1(42),     '92cfceb39d57d914ed8b14d0e37643de0797ae56', 'sha1 number' );
+is( $app->str->sha1("perl"), '15b94a66acd70379828a529996c8592a6535951b', 'sha1 bytes string' );
+
 done_testing;
