@@ -133,6 +133,29 @@ Sub::Defer::defer_sub __PACKAGE__ . '::trim' => sub {
     };
 };
 
+sub epoch {
+    return time;
+}
+
+sub attrs {
+    my ( $str, $attr_hr, $ignore ) = @_;
+    return '' if !keys %{$attr_hr};
+    return ' ' . join(
+        ' ',
+        map { exists $ignore->{$_} ? () : !defined $attr_hr->{$_} ? $_ : $_ . '="' . $str->escape_html( $attr_hr->{$_} ) . '"' }
+          keys %{$attr_hr}
+
+    );
+}
+
+Sub::Defer::defer_sub __PACKAGE__ . '::escape_html' => sub {
+    require HTML::Escape;
+    return sub {
+        shift;
+        goto &HTML::Escape::escape_html;
+    };
+};
+
 1;
 
 __END__
@@ -231,6 +254,28 @@ A second boolean argument (default false) will collapse multiple space/non-break
 =head2 sha1()
 
 Lazy wrapper of L<Digest::SHA>’s sha1().
+
+=head2 epoch()
+
+Takes no arguments, returns the current epoch.
+
+=head2 attrs()
+
+Take a hashref of attributes to stringify. There will be a leading space (to avoid extra space in output/logic in template use).
+
+If the value is undef then only the name is output (e.g. for HTML5-osh boolean attributes). The values are HTML escaped.
+
+If order matters build them from multiple calls in the order you want.
+
+    $str->attrs({class=>"foo bar", required=>undef}) # ' class="foo bar" required'
+
+Takes a second optional argument that is a lookup hashref of attributes to ignore.
+
+    $str->attrs({class=>"foo bar", required=>undef}, {class=>1}) # ' required'
+
+=head2 escape_html()
+
+Lazy wrapper of L<HTML::Escape>’s escape_html().
 
 =head1 DIAGNOSTICS
 

@@ -118,4 +118,35 @@ for my $str (@strings) {
 is( $app->str->sha1(42),     '92cfceb39d57d914ed8b14d0e37643de0797ae56', 'sha1 number' );
 is( $app->str->sha1("perl"), '15b94a66acd70379828a529996c8592a6535951b', 'sha1 bytes string' );
 
+#### epoch ##
+
+my $time  = time;
+my $epoch = $app->str->epoch;
+cmp_ok( $epoch, '>=', $time, 'epoch() works like time' );    # if this fails due to a race your clock is busted
+
+#### attrs ##
+
+my $attrs = $app->str->attrs( { title => "hello & world", class => "foo bar" } );
+like( $attrs, qr/^ \S/,                       'attrs begines witha space' );
+like( $attrs, qr/ class="foo bar"/,           'basic attr formatted as expected' );
+like( $attrs, qr/ title="hello &amp; world"/, 'attr values with HTML escaped' );
+
+$attrs = $app->str->attrs( { title => "hello & world", class => "foo bar", required => undef, barf => "" } );
+like( $attrs, qr/^ \S/,                       'attrs begines witha space' );
+like( $attrs, qr/ class="foo bar"/,           'basic attr formatted as expected 2' );
+like( $attrs, qr/ title="hello &amp; world"/, 'attr values with HTML escaped 2' );
+like( $attrs, qr/ barf=""/,                   'attr empty formatted as expected (empty value)' );
+like( $attrs, qr/ required(?!=)/,             'attr undef formatted as boolean (no value)' );
+
+$attrs = $app->str->attrs( { title => "hello & world", class => "foo bar", required => undef, barf => "" }, { barf => 1, required => 1, title => 1 } );
+like( $attrs, qr/^ \S/,             'attrs begines witha space' );
+like( $attrs, qr/ class="foo bar"/, 'basic attr formatted as expected 3' );
+unlike( $attrs, qr/ title="hello &amp; world"/, 'attr ignored (value)' );
+unlike( $attrs, qr/ barf=""/,                   'attr ignored (empty)' );
+unlike( $attrs, qr/ required/,                  'attr ignored (undef)' );
+
+#### escape_html ##
+
+is( $app->str->escape_html(qq{<b>hack's&reg</b>The "planet's'" `peril` &copy;}), '&lt;b&gt;hack&#39;s&amp;reg&lt;/b&gt;The &quot;planet&#39;s&#39;&quot; &#96;peril&#96; &amp;copy;', q{escape_html() does multiple <>"'`& characters} );
+
 done_testing;
