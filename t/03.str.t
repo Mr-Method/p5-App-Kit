@@ -113,10 +113,10 @@ for my $str (@strings) {
     is $app->str->trim( $str->[0], 1 ), $str->[2], "trim($str->[3],1)";
 }
 
-### sha1 ###
+### sha512 ###
 
-is( $app->str->sha1(42),     '92cfceb39d57d914ed8b14d0e37643de0797ae56', 'sha1 number' );
-is( $app->str->sha1("perl"), '15b94a66acd70379828a529996c8592a6535951b', 'sha1 bytes string' );
+is( $app->str->sha512(42),     '39ca7ce9ecc69f696bf7d20bb23dd1521b641f806cc7a6b724aaa6cdbffb3a023ff98ae73225156b2c6c9ceddbfc16f5453e8fa49fc10e5d96a3885546a46ef4', 'sha512 number' );
+is( $app->str->sha512("perl"), 'a07b1e41acd79ad0da14aff1835099132c30c27f6bfd726304ecd19c2d8aaee81691ed56ec15e4d73f1bb6408f11a4842d43070ce3e02364e94d61a89748b122', 'sha512 bytes string' );
 
 #### epoch ##
 

@@ -10,7 +10,7 @@ Revision history for App-Kit
     - add JSON and YAML methods to str()
     - add fs->is_safe_part and fs->is_safe_path
     - add str->trim
-    - add str->sha1
+    - add str->sha512
     - add str->epoch, str->attrs, str->escape_html
 
 0.62  2013-12-17 05:15:32

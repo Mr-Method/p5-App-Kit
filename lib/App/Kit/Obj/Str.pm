@@ -95,11 +95,11 @@ sub ref_to_jsonp {
     return $function . '(' . $app->ref_to_json($ref) . ');';
 }
 
-Sub::Defer::defer_sub __PACKAGE__ . '::sha1' => sub {
+Sub::Defer::defer_sub __PACKAGE__ . '::sha512' => sub {
     require Digest::SHA;
     return sub {
         shift;
-        goto &Digest::SHA::sha1_hex;
+        goto &Digest::SHA::sha512_hex;
     };
 };
 
@@ -251,9 +251,9 @@ and returns a version of it with all unicode whitespace (except space and non-br
 
 A second boolean argument (default false) will collapse multiple space/non-break-space sequences down to a single space.
 
-=head2 sha1()
+=head2 sha512()
 
-Lazy wrapper of L<Digest::SHA>’s sha1().
+Lazy wrapper of L<Digest::SHA>’s sha512_hex().
 
 =head2 epoch()
 
