@@ -11,6 +11,7 @@ my $app = App::Kit->new();
 is( $app, $app->fs->_app, '_app() returns instantiation app' );
 
 # $app->fs->cwd
+Class::Unload->unload("Cwd") if exists $INC{'Cwd.pm'};
 ok( !exists $INC{'Cwd.pm'}, 'Sanity: Cwd not loaded before cwd()' );
 is( $app->fs->cwd, Cwd::cwd(), 'cwd() meth returns same Cwd::cwd' );    # since the method loads the module the second arg works without an explicit use statement
 ok( exists $INC{'Cwd.pm'}, 'Cwd lazy loaded on initial cwd()' );
